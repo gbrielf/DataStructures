@@ -1,5 +1,5 @@
-PilhaRubroNegraVaziaException extends RunTimeException {
-    public PilhaRubroNegraVaziaException(string err){
+class PilhaRubroNegraVaziaException extends RuntimeException {
+    public PilhaRubroNegraVaziaException(String err){
         super(err);
     }
 }

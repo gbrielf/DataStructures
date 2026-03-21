@@ -1,13 +1,13 @@
 public class PilhaArrayRubroNegra implements PilhaRubroNegra{
     private int N;
-    private tvermelho;
-    private tpreto;
-    private Object a;
+    private int tv;
+    private int tp;
+    private Object[] a;
     
     public PilhaArrayRubroNegra(int N){
     this.N = N;
-    tvermelho = -1;
-    tpreto = N + 1;
+    tv = -1;
+    tp = N + 1;
     a = new Object[N*2];
     }
     
@@ -20,78 +20,78 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
     }
 
     public boolean estaCheia(){
-        return tv = tp + 1;
+        return tv == tp + 1;
     }
 
-    public int sizeVermelho(){
-    return tv+1;
+    public int sizeVermelha(){
+    return tv + 1;
     }
 
-    public int sizePreto(){
+    public int sizePreta(){
         return N - tp;
     }
 
-    public Object pushVermelho(Object o){
+    public void pushVermelha(Object o){
         if (estaCheia()){
             aumentarCapacidade();
         }
-        S[++tv] = o;
+        a[++tv] = o;
     }
 
-    public Object pushPreto(Object o){
+    public void pushPreta(Object o){
         if (estaCheia()){
             aumentarCapacidade();
         }
-        S[--tp] = o;
+        a[--tp] = o;
     }
 
-    public Object popVermelho(){
+    public Object popVermelha(){
         if (estaVaziaVermelha()){
-            throw new RunTimeException("A Pilha Vermelha está vazia.");
+            throw new RuntimeException("A Pilha Vermelha está vazia.");
         }
         Object resultado = a[tv];
-        S[tv--] = Null;
+        a[tv--] = null;
         return resultado;
     }
 
-    public Object popPreto(){
+    public Object popPreta(){
         if (estaVaziaPreta()){
-            throw new RunTimeException("A Pilha Preta está vazia.");
+            throw new RuntimeException("A Pilha Preta está vazia.");
         }
         Object resultado = a[tp];
-        S[tp++] = Null;
+        a[tp++] = null;
         return resultado;
     }
 
-    public Object topVermelho(){
+    public Object topVermelha(){
         if (tv == -1){
-            throw new PilhaVaziaException("Pilha vermelha está vazia");
+            throw new PilhaRubroNegraVaziaException("Pilha vermelha está vazia");
         }
-        return S[tv];
+        return a[tv];
     }
 
-    public Object topPreto(){
+    public Object topPreta(){
         if (tp == N){
-            throw new PilhaVaziaException("Pilha Preta está vazia");
+            throw new PilhaRubroNegraVaziaException("Pilha Preta está vazia");
         }
-        return S[tp];
+        return a[tp];
     }
 
     public void aumentarCapacidade(){
-        int capacidadeAntiga = capacidade;
-        capacidade *= 2;
-        Object[] b = new Object[capacidade];
+        int nAntiga = N;
+        N *= 2;
+        Object[] b = new Object[N];
         
         //for para pilha vermelha
         for (int i = 0; i <= tv; i++){
-            b[i] = a[i]
+            b[i] = a[i];
         }
 
-        int j = capacidade -1;
+        int j = N -1;
 
         //for para pilha preta
-        for (int i = capacidadeAntiga - 1; i >= tp; i--){
-            b[j--] = a[i]
+        for (int i = nAntiga - 1; i >= tp; i--){
+            b[j--] = a[i];
         }
 
         tp = j+1; 
