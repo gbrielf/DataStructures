@@ -7,7 +7,7 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
     public PilhaArrayRubroNegra(int N){
     this.N = N;
     tv = -1;
-    tp = N + 1;
+    tp = N;
     a = new Object[N*2];
     }
     
@@ -20,7 +20,7 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
     }
 
     public boolean estaCheia(){
-        return tv == tp + 1;
+        return tv + 1 == tp;
     }
 
     public int sizeVermelha(){
@@ -98,5 +98,27 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
 
         a = b;
     }
-        
+
+    public void diminuirCapacidade(){
+        int NAntigo=N;
+        N=N/2;
+        Object[] b = new Object[N];
+        int elementosTotais = tv + 1 + (N - tp); 
+
+        if (elementosTotais < NAntigo/3){
+            for(int i = 0; i <= tv; i++){
+                b[i] = a[i];
+            }
+
+            int novoTp = N - (NAntigo - tp);
+            int j = N-1;
+
+            for(int i = N - 1; i >= tp; i--){
+                b[j--] = a[i];
+            }
+
+            tp = j + 1;
+            a = b;  
+        }     
+    }
 }
