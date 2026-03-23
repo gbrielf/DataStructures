@@ -32,7 +32,23 @@ class PilhaArray implements Pilha{
             return removido;
         }
 
-        public void aumentarPilha(){}
+        public void push(Object o){
+            if(topo == capacidade +1){
+                if(FC == 0){
+                    capacidade *= 2;
+                }else{
+                    capacidade += FC;
+                }
+
+                Object[] b = new Object[capacidade];
+
+                for(int i=0; i <= a.length; i++){
+                    b[i] = a[i];
+                }
+                a=b;
+            }
+            a[++t] = o;
+        }
 
     }
 }
