@@ -9,7 +9,7 @@ class FilaComListaLigada{
         this.tamanho = 0;
     }
 
-    public void Enqueue(Object elemento){
+    public void enqueue(Object elemento){
         No novoNo = new No(elemento);
 
         if(inicio == null){
@@ -22,17 +22,31 @@ class FilaComListaLigada{
         tamanho++;
     }
 
-    public No Dequeue(){
-        if (inicio == null){
+    public Object dequeue(){
+        if (isEmpty()){
             throw new FilaVaziaException("A fila está vazia.");
         }
-        No elementoRemovido = inicio.getElemento();
+        Object elementoRemovido = inicio.getElemento();
         inicio = inicio.getProximo();
         
         if(inicio == null){
-            fim == null;
+            fim = null;
         }
-
+        tamanho--;
         return elementoRemovido;
     }
+
+    public Object first(){
+        return inicio.getElemento();
+    }
+
+    public int size(){
+        return tamanho;
+    }
+
+    public boolean isEmpty(){
+        return (inicio == null);
+    }
+
+
 }
