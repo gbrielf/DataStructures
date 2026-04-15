@@ -1,3 +1,5 @@
+package FilaArrayComReversao;
+
 public class TesteFilaComReversao {
     public static void main(String[] args) {
         System.out.println("=== Iniciando Teste Fila com Reversão ===");

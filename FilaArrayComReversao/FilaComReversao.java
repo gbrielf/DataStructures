@@ -1,3 +1,5 @@
+package FilaArrayComReversao;
+
 interface FilaComReversao {
     public void enqueue(Object O); 
     //lança isFull() quando cheia, dobrando capacidade da fila
