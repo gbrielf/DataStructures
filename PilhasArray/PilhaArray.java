@@ -9,46 +9,48 @@ class PilhaArray implements Pilha{
         topo = -1;
         FC = crescimento;
         a = new Object[capacidade];
-
-        public boolean isEmpty(){
-            return topo==-1;
-        }
-
-        public Object top(){
-            if(isEmpty()){
-                throw new PilhaVaziaException("A pilha está vazia, top exception.");
-            }
-        }
-
-        public int size(){
-            return topo+1;
-        }
-
-        public Object pop(){
-            if(isEmpty()){
-                throw new PilhaVaziaException("A pilha está vazia, pop exception.")
-            }
-            Object removido = a[t--];
-            return removido;
-        }
-
-        public void push(Object o){
-            if(topo == capacidade +1){
-                if(FC == 0){
-                    capacidade *= 2;
-                }else{
-                    capacidade += FC;
-                }
-
-                Object[] b = new Object[capacidade];
-
-                for(int i=0; i <= a.length; i++){
-                    b[i] = a[i];
-                }
-                a=b;
-            }
-            a[++t] = o;
-        }
-
     }
+
+    public Object top(){
+        if(isEmpty()){
+            throw new PilhaVaziaException("A pilha está vazia, top exception.");
+        }
+
+        return a[topo];
+    }
+
+    public int size(){
+        return topo+1;
+    }
+
+    public Object pop(){
+        if(isEmpty()){
+            throw new PilhaVaziaException("A pilha está vazia, pop exception.");
+        }
+        Object removido = a[topo--];
+        return removido;
+    }
+
+    public void push(Object o){
+        if(topo == capacidade +1){
+            if(FC == 0){
+                capacidade *= 2;
+            }else{
+                capacidade += FC;
+            }
+
+            Object[] b = new Object[capacidade];
+
+            for(int i=0; i <= a.length; i++){
+                b[i] = a[i];
+            }
+            a=b;
+        }
+        a[++topo] = o;
+    }
+
+    public boolean isEmpty(){
+        return topo==-1;
+    }
+
 }
