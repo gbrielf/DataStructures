@@ -4,11 +4,17 @@ public class VetorArray implements Vetor{
     private int capacidade;
     private int tamanho;
     private Object[] a;
+    private int inicio;
 
     public VetorArray(int capacidade){
         this.capacidade = capacidade;
         tamanho = 0;
+        this.inicio = 0;
         a = new Object[capacidade];
+    }
+
+    private int indiceFisico(int ranking){
+        return (inicio + ranking ) % capacidade;
     }
 
     public Object elemAtRank(int ranking){
@@ -18,7 +24,7 @@ public class VetorArray implements Vetor{
             throw new VetorVazioException("O vetor está vazio!");
         }
 
-        return a[ranking];
+        return a[indiceFisico(ranking)];
     }
 
     public Object replaceAtRank(int ranking, Object elemento){
@@ -28,8 +34,9 @@ public class VetorArray implements Vetor{
             throw new VetorVazioException("Não é possível alterar elemento, o vetor está vazio!");
         }
 
-        Object resultado = a[ranking];
-        a[ranking] = elemento;
+        int idx = indiceFisico(ranking);
+        Object resultado = a[idx];
+        a[idx] = elemento;
         return resultado;
     }
 
@@ -42,10 +49,9 @@ public class VetorArray implements Vetor{
         }
 
         for(int i = tamanho; i > ranking; i--){
-               a[i] = a[i - 1]; 
+               a[indiceFisico(i)] = a[indiceFisico(i-1)]; 
         }
-        a[ranking] = elemento;
-
+        a[indiceFisico(ranking)] = elemento;
         tamanho++;
     }
 
@@ -81,10 +87,11 @@ public class VetorArray implements Vetor{
         Object[] b = new Object[novaCapacidade];
 
         for(int i = 0; i < tamanho; i++){
-            b[i] = a[i];
+            b[i] = a[indiceFisico(i)];
         }
 
         a = b;
         capacidade = novaCapacidade;
+        inicio = 0;
     }
 }
