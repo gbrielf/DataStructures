@@ -49,6 +49,10 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
         if (estaVaziaVermelha()){
             throw new RuntimeException("A Pilha Vermelha está vazia.");
         }
+        if (sizeVermelha() <= N / 3){
+            diminuirCapacidade();
+        }
+
         Object resultado = a[tv];
         a[tv--] = null;
         return resultado;
@@ -58,6 +62,10 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
         if (estaVaziaPreta()){
             throw new RuntimeException("A Pilha Preta está vazia.");
         }
+        if (sizePreta() <= N / 3){
+            diminuirCapacidade();
+        }
+        
         Object resultado = a[tp];
         a[tp++] = null;
         return resultado;
@@ -103,21 +111,20 @@ public class PilhaArrayRubroNegra implements PilhaRubroNegra{
         int NAntigo=N;
         N=N/2;
         Object[] b = new Object[N];
-        int elementosTotais = tv + 1 + (N - tp); 
+        int elementosTotais = tv + 1 + (NAntigo - tp); 
 
         if (elementosTotais < NAntigo/3){
             for(int i = 0; i <= tv; i++){
                 b[i] = a[i];
             }
 
-            int novoTp = N - (NAntigo - tp);
             int j = N-1;
 
-            for(int i = N - 1; i >= tp; i--){
+            for(int i = NAntigo - 1; i >= tp; i--){
                 b[j--] = a[i];
             }
 
-            tp = j + 1;
+            tp = j + 1; // ou tp = novoTp;
             a = b;  
         }     
     }
