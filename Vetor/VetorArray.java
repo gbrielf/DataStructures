@@ -13,7 +13,7 @@ public class VetorArray implements Vetor{
         a = new Object[capacidade];
     }
 
-    private int indiceFisico(int ranking){
+    private int indiceCircular(int ranking){
         return (inicio + ranking ) % capacidade;
     }
 
@@ -24,7 +24,7 @@ public class VetorArray implements Vetor{
             throw new VetorVazioException("O vetor está vazio!");
         }
 
-        return a[indiceFisico(ranking)];
+        return a[indiceCircular(ranking)];
     }
 
     public Object replaceAtRank(int ranking, Object elemento){
@@ -34,42 +34,47 @@ public class VetorArray implements Vetor{
             throw new VetorVazioException("Não é possível alterar elemento, o vetor está vazio!");
         }
 
-        int idx = indiceFisico(ranking);
+        int idx = indiceCircular(ranking);
         Object resultado = a[idx];
         a[idx] = elemento;
         return resultado;
     }
 
     public void insertAtRank(int ranking, Object elemento){
-        if(ranking > tamanho - 1 || ranking < 0){
+        if(ranking > tamanho || ranking < 0){
             throw new VetorRankingException("O ranking informado não existe");
         }
-        if(ranking == capacidade - 1){
-            aumentarCapacidade();
+        if(tamanho == capacidade){
+            alterarCapacidade();
         }
 
         for(int i = tamanho; i > ranking; i--){
-               a[indiceFisico(i)] = a[indiceFisico(i-1)]; 
+               a[indiceCircular(i)] = a[indiceCircular(i-1)]; 
         }
-        a[indiceFisico(ranking)] = elemento;
+
+        a[indiceCircular(ranking)] = elemento;
         tamanho++;
     }
 
     public Object removeAtRank(int ranking){
-        if(ranking > capacidade - 1 || ranking < 0){
+        if(ranking > tamanho - 1 || ranking < 0){
             throw new VetorRankingException("O ranking informado não existe");
         }else if(isEmpty()){
             throw new VetorVazioException("Não é possível remover, o vetor está vazio!");
         }
 
-        Object resultado = a[ranking];
+        Object resultado = a[indiceCircular(ranking)];
 
         for(int i = ranking; i < tamanho - 1; i++){
-            a[i] = a[i + 1];
+            a[indiceCircular(i)] = a[indiceCircular(i + 1)];
         }
 
-        a[tamanho-1] = null;
+        a[indiceCircular(tamanho-1)] = null;
         tamanho--;
+
+        if (tamanho <= capacidade/3){
+            alterarCapacidade();
+        }
         
         return resultado;
     }
@@ -82,12 +87,20 @@ public class VetorArray implements Vetor{
         return tamanho == 0;
     }
 
-    public void aumentarCapacidade(){
-        int novaCapacidade = capacidade * 2;
+    public void alterarCapacidade(){
+        int novaCapacidade = 0;
+
+        if(tamanho == capacidade){
+            novaCapacidade = capacidade * 2;
+        }
+        else if(tamanho <= capacidade/3){
+            novaCapacidade = capacidade / 2;
+        }
+
         Object[] b = new Object[novaCapacidade];
 
         for(int i = 0; i < tamanho; i++){
-            b[i] = a[indiceFisico(i)];
+            b[i] = a[indiceCircular(i)];
         }
 
         a = b;
