@@ -11,7 +11,7 @@ public class No {
         this.elemento = elemento;
     }
 
-    public No getPrevious(){
+    public No getPrev(){
         return anterior;
     }
 
@@ -23,7 +23,7 @@ public class No {
         return elemento;
     }
 
-    public void setPrevious(No anterior){
+    public void setPrev(No anterior){
         this.anterior = anterior;
     }
 
