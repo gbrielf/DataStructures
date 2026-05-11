@@ -7,5 +7,4 @@ public interface Vetor {
     public Object removeAtRank(int r);
     public int size();
     public boolean isEmpty();
-    public void alterarCapacidade();
 }
