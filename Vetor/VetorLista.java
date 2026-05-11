@@ -16,6 +16,13 @@ public class VetorLista implements Vetor{
     }
 
     public Object elemAtRank(int r){
+        No novoNo = new No();
         
+
+        for (int i = 0; i < r; i++){
+            if(i == r){
+                return 
+            }
+        }
     }
 }
