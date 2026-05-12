@@ -171,18 +171,29 @@ public class ListaDuplamenteLigadaArray {
         for(int i = tamanho; i > 0; i--){
             a[i] = a[i - 1];
         }
-        if(head == -1){
-            a[0] = novoNo;
-        }else{
-            a[head] = novoNo;
-        }
+
+        a[0] = novoNo;
+
+        head = 0;
         tamanho++;
-        head++;
+        tail++;
     }
 
     public void insertLast(Object o){
+        if(tamanho == capacidade){
+            throw new RuntimeException("O lista está cheia!");
+        }
+
+        No novoNo = new No(o);
+        a[++tail] = novoNo;
+            
+        if(tamanho == 0){
+            head = 0;
+        }
+
+        tamanho++;
     }
-    
+
     public Object remove(No n){
         if(isEmpty()){
             throw new ListIsEmptyException("A lista já está vazia");
