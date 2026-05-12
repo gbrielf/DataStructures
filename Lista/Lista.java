@@ -10,8 +10,8 @@ public interface Lista{
     public boolean isLast(No n); //ok
 
     // métodos de acesso a info
-    public Object getFirst(); //ok
-    public Object getLast(); //ok
+    public No getFirst(); //ok
+    public No getLast(); //ok
     public No before(No p); //ok  retorna nó antes
     public No after(No p); //ok retorna nó seguinte
 

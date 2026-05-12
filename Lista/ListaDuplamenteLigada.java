@@ -29,13 +29,19 @@ public class ListaDuplamenteLigada implements Lista{
         return n.getNext() == tail;
     }
 
-    public Object getFirst(){        
+    public No getFirst(){        
+        if(isEmpty()){
+            throw new ListIsEmptyException("A lista está vazia!");
+        }
         // head.getNext() é equivalente a "proximo". proximo + getElement() = proximo.getElement()
-        return head.getNext().getElement();
+        return head.getNext();
     }
 
-    public Object getLast(){
-        return tail.getPrev().getElement();
+    public No getLast(){
+        if(isEmpty()){
+            throw new ListIsEmptyException("A lista está vazia!");
+        }
+        return tail.getPrev();
     }
 
     public No before(No p){
