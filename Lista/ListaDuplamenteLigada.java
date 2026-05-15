@@ -9,7 +9,7 @@ public class ListaDuplamenteLigada implements Lista{
         this.head = new No(null);
         this.tail = new No(null);
         this.head.setNext(tail);
-        this.tail.setPrevious(head);
+        this.tail.setPrev(head);
         tamanho = 0;
     }
 
@@ -22,24 +22,30 @@ public class ListaDuplamenteLigada implements Lista{
     }
 
     public boolean isFirst(No n){
-        return n.getPrevious() == head;
+        return n.getPrev() == head;
     }
 
     public boolean isLast(No n){
         return n.getNext() == tail;
     }
 
-    public Object getFirst(){        
+    public No getFirst(){        
+        if(isEmpty()){
+            throw new ListIsEmptyException("A lista está vazia!");
+        }
         // head.getNext() é equivalente a "proximo". proximo + getElement() = proximo.getElement()
-        return head.getNext().getElement();
+        return head.getNext();
     }
 
-    public Object getLast(){
-        return tail.getPrevious().getElement();
+    public No getLast(){
+        if(isEmpty()){
+            throw new ListIsEmptyException("A lista está vazia!");
+        }
+        return tail.getPrev();
     }
 
     public No before(No p){
-        return p.getPrevious();
+        return p.getPrev();
     }
     
     public No after(No p){
@@ -49,9 +55,9 @@ public class ListaDuplamenteLigada implements Lista{
     public No insertBefore(No n, Object o){
         No novoNo = new No(o);
         novoNo.setNext(n);
-        novoNo.setPrevious(n.getPrevious());
-        n.getPrevious().setNext(novoNo);
-        n.setPrevious(novoNo);
+        novoNo.setPrev(n.getPrev());
+        n.getPrev().setNext(novoNo);
+        n.setPrev(novoNo);
         tamanho++;
 
         return novoNo;
@@ -59,9 +65,9 @@ public class ListaDuplamenteLigada implements Lista{
 
     public No insertAfter(No n, Object o){
         No novoNo = new No(o);
-        novoNo.setPrevious(n); //informa quem é o anterior ao novo nó
+        novoNo.setPrev(n); //informa quem é o anterior ao novo nó
         novoNo.setNext(n.getNext()); // informa quem é o sucessor ao novo nó
-        (n.getNext()).setPrevious(novoNo);
+        (n.getNext()).setPrev(novoNo);
         n.setNext(novoNo);
         tamanho++;
 
@@ -83,9 +89,9 @@ public class ListaDuplamenteLigada implements Lista{
 
     public void insertFirst(Object elemento){
         No novoNo = new No(elemento);
-        novoNo.setPrevious(head);
+        novoNo.setPrev(head);
         novoNo.setNext(head.getNext());
-        head.getNext().setPrevious(novoNo);
+        head.getNext().setPrev(novoNo);
         head.setNext(novoNo);
         tamanho++;
     }
@@ -93,15 +99,15 @@ public class ListaDuplamenteLigada implements Lista{
     public void insertLast(Object elemento){
         No novoNo = new No(elemento);
         novoNo.setNext(tail);
-        novoNo.setPrevious(tail.getPrevious());
-        tail.getPrevious().setNext(novoNo);
-        tail.setPrevious(novoNo);
+        novoNo.setPrev(tail.getPrev());
+        tail.getPrev().setNext(novoNo);
+        tail.setPrev(novoNo);
         tamanho++;
     }
 
     public Object remove(No n){
-        n.getNext().setPrevious(n.getPrevious());
-        n.getPrevious().setNext(n.getNext());
+        n.getNext().setPrev(n.getPrev());
+        n.getPrev().setNext(n.getNext());
         tamanho--;
 
         return n.getElement();

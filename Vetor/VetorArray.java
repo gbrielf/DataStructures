@@ -19,9 +19,9 @@ public class VetorArray implements Vetor{
 
     public Object elemAtRank(int ranking){
         if(ranking > tamanho - 1 || ranking < 0){
-            throw new VetorRankingException("O ranking informado não existe");
+            throw new VectorRankingException("O ranking informado não existe");
         }else if(isEmpty()){
-            throw new VetorVazioException("O vetor está vazio!");
+            throw new VectorIsEmptyException("O vetor está vazio!");
         }
 
         return a[indiceCircular(ranking)];
@@ -29,9 +29,9 @@ public class VetorArray implements Vetor{
 
     public Object replaceAtRank(int ranking, Object elemento){
         if(ranking > tamanho - 1 || ranking < 0){
-            throw new VetorRankingException("O ranking informado não existe");
+            throw new VectorRankingException("O ranking informado não existe");
         }else if(isEmpty()){
-            throw new VetorVazioException("Não é possível alterar elemento, o vetor está vazio!");
+            throw new VectorIsEmptyException("Não é possível alterar elemento, o vetor está vazio!");
         }
 
         int idx = indiceCircular(ranking);
@@ -42,7 +42,7 @@ public class VetorArray implements Vetor{
 
     public void insertAtRank(int ranking, Object elemento){
         if(ranking > tamanho || ranking < 0){
-            throw new VetorRankingException("O ranking informado não existe");
+            throw new VectorRankingException("O ranking informado não existe");
         }
         if(tamanho == capacidade){
             alterarCapacidade();
@@ -58,9 +58,9 @@ public class VetorArray implements Vetor{
 
     public Object removeAtRank(int ranking){
         if(ranking > tamanho - 1 || ranking < 0){
-            throw new VetorRankingException("O ranking informado não existe");
+            throw new VectorRankingException("O ranking informado não existe");
         }else if(isEmpty()){
-            throw new VetorVazioException("Não é possível remover, o vetor está vazio!");
+            throw new VectorIsEmptyException("Não é possível remover, o vetor está vazio!");
         }
 
         Object resultado = a[indiceCircular(ranking)];
@@ -87,7 +87,7 @@ public class VetorArray implements Vetor{
         return tamanho == 0;
     }
 
-    public void alterarCapacidade(){
+    protected void alterarCapacidade(){
         int novaCapacidade = 0;
 
         if(tamanho == capacidade){
