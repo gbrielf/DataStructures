@@ -1,3 +1,5 @@
+package PilhasArray;
+
 interface Pilha{
     // exceptions dos métodos
     public boolean isEmpty();

@@ -7,7 +7,7 @@ public class TestePilhaRubroNegra {
         pilha.pushVermelha("B");
         System.out.println("top vermelha: " + pilha.topVermelha()); // B
         System.out.println("Pop vermelha: " + pilha.popVermelha());  // B
-        System.out.println("top vermelha: " + pilha.topVermelha()); // A
+        System.out.println("top vermelha: " + pilha.topVermelha()); // ASys
         System.out.println("Pop vermelha: " + pilha.popVermelha());  // A
         System.out.println("Está vazia vermelha? " + pilha.estaVaziaVermelha()); // true
 
