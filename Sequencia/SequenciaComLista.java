@@ -1,25 +1,19 @@
-package Vetor;
+package Sequencia;
+import Lista.ListaDuplamenteLigada;
 import Lista.No;
+import Vetor.VectorRankingException; 
+import Vetor.VectorIsEmptyException; 
 
-public class VetorListaDuplamenteLigada implements Vetor{
-    private int tamanho;
-    private No inicio;
-    private No fim;
 
-    public VetorListaDuplamenteLigada(){
-        this.tamanho = 0;
-        this.inicio = new No(null);
-        this.fim = new No(null);
-        this.inicio.setNext(fim);
-        this.fim.setPrev(inicio);
-    }
+class SequenciaComLista extends ListaDuplamenteLigada implements Sequencia{
+    No head;
+    No tail;
+    int tamanho;
 
-    public int size(){
-        return tamanho;
-    }
-
-    public boolean isEmpty(){
-        return tamanho == 0;
+    public SequenciaComLista(){
+        tamanho = 0;
+        head.getNext(tail);
+        tail.getPrev(head);
     }
 
     public Object elemAtRank(int r){
@@ -29,7 +23,7 @@ public class VetorListaDuplamenteLigada implements Vetor{
             throw new VectorIsEmptyException("O vetor está vazio");
         }
 
-        No cursor = inicio.getNext();
+        No cursor = head.getNext();
 
         for (int i = 0; i < r; i++){
             cursor = cursor.getNext();
@@ -45,7 +39,7 @@ public class VetorListaDuplamenteLigada implements Vetor{
             throw new VectorIsEmptyException("O vetor está vazio");
         }
     
-        No cursor = inicio.getNext();
+        No cursor = head.getNext();
         Object resultado;
     
         for(int i =0; i < r; i++){
@@ -55,17 +49,16 @@ public class VetorListaDuplamenteLigada implements Vetor{
         resultado = cursor.getElement();
         cursor.setElement(o);
         return resultado;
-                
     }
 
-    public void insertAtRank(int r, Object novoElemento){
+    public void insertAtRank(int r, Object o){
         if (r > size() || r < 0){
             throw new VectorRankingException("O ranking informado não está disponível!");
         }
 
         No novoNo = new No(novoElemento);
 
-        No cursor = inicio;
+        No cursor = head;
 
         
         for(int i = 0; i < r; i++){
@@ -78,7 +71,7 @@ public class VetorListaDuplamenteLigada implements Vetor{
         cursor.setNext(novoNo);
         tamanho++;
     }
-
+ 
     public Object removeAtRank(int r){
         if(isEmpty()){
             throw new VectorIsEmptyException("O vetor está vazio!");
@@ -87,7 +80,7 @@ public class VetorListaDuplamenteLigada implements Vetor{
             throw new VectorRankingException("O ranking informado não está disponível!");
         }
         
-        No cursor = inicio.getNext();
+        No cursor = head.getNext();
         
         for(int i = 0; i < r; i++){
             cursor = cursor.getNext();
@@ -99,6 +92,30 @@ public class VetorListaDuplamenteLigada implements Vetor{
         cursor.getNext().setPrev(cursor.getPrev());
 
         tamanho--;
-        return resultado;
+        return resultado;    
+    }
+
+    public No atRank(int r){
+        No novoNo;
+
+        if(r <= size()/2){
+            novoNo = head.getNext();
+        }else{
+            novoNo = tail.getPrev();
+            for(int i = 0; i < size() - r - 1; i++){
+                novoNo = novoNo.getPrev();
+            }
+        }
+        return novoNo;
+    }
+
+    public int rankOf(No no){
+        Nó novoNo = head.getNext();
+        int indice = 0;
+        while(novoNo != no && novoNo != tail){
+            novoNo = novoNo.getNext();
+            indice++;
+        }
+        return indice;
     }
 }

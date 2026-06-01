@@ -1,3 +1,5 @@
+package PilhasArray;
+
 class PilhaArray implements Pilha{
     int FC;
     int capacidade;
