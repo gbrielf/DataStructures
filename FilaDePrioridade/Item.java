@@ -1,8 +1,8 @@
-public class Item{
+public class Item<T>{
     private int chave;
     private Object elemento;  
     
-    public Item(int chave, Object elemento){
+    public Item(int chave, T elemento){
         this.elemento = elemento;   
         this.chave = chave;
     }
@@ -11,15 +11,7 @@ public class Item{
         return this.chave;
     }
 
-    public Object getElemento(){
+    public T getElemento(){
         return this.elemento;
-    }
-
-    public void setChave(int novaChave){
-        this.chave = novaChave;
-    }
-
-    public void setElemento(Object novoElemento){
-        this.elemento = novoElemento;
     }
 }
