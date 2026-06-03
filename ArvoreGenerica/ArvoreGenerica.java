@@ -1,6 +1,6 @@
 package ArvoreGenerica;
 import java.util.ArrayList;
-import java.utils.Iterator;
+import java.util.Iterator;
 
 class ArvoreGenerica{
     No raiz;
@@ -16,7 +16,7 @@ class ArvoreGenerica{
     }
 
     public No parent(No n){
-        return (n.parent());
+        return n.parent();
     }
 
     public Iterator children(No n){
@@ -42,32 +42,29 @@ class ArvoreGenerica{
     public void swapElements(No n, No m){}
 
     public int depth(No n){
-        int profundidade = depthRecursive(n);
-        
-        return profundidade;
+        return depthRecursive(n);
     }
 
     private int depthRecursive(No n){
         if(isRoot(n)){
             return 0;
-        }else{
+        } else {
             return 1 + depthRecursive(n.parent());
         }
     }
 
     // Algoritmo altura(v) – O(n)
-    public int height(){
-        No noSelecionado = raiz;
+    public int height(No n){
         // se (isExternal(v))
-        if(isExternal(noSelecionado)){
+        if(isExternal(n)){
             // retorne 0
             return 0;
         // senão
-        }else{
+        } else {
             // h=0
             int altura = 0;
 
-            Iterator<No> filhos = noSelecionado.children();
+            Iterator<No> filhos = n.children();
 
             // para cada w em children(v)
             while(filhos.hasNext()){
@@ -93,20 +90,20 @@ class ArvoreGenerica{
 
     }
 
-    public Iterator preOrder(No n, ArrayList list){
+    public Iterator preOrder(No n, ArrayList<No> list){
         if(n == null){
-         return list.iterator();
+            return list.iterator();
         }
 
         list.add(n);
         
-        Iterator filhos = n.children();
+        Iterator<No> filhos = n.children();
 
         while(filhos.hasNext()){
             No filho = filhos.next();
             preOrder(filho, list);
         }
-        
+
         return list.iterator();
     }
     
