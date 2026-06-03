@@ -2,7 +2,6 @@ package ArvoreGenerica;
 
 class ArvoreGenerica{
     No raiz;
-    No[] filhos;
     int tamanho;
 
     public ArvoreGenerica(Object o){
@@ -10,20 +9,55 @@ class ArvoreGenerica{
         tamanho = 1;
     }
 
-    public int size(){
-        return tamanho;
+    public No root(){
+        return raiz;
     }
 
+    public No parent(No n){
+        return (v.parent());
+    }
+
+    public Iterator children(No n){
+        return n.children();
+    }
+
+    public boolean isInternal(No n){
+        return (n.getFilhos().length() != 0);
+    }
+    
+    public boolean isExternal(No n){
+        return (n.getFilhos().length() == 0);
+    }
+
+    public boolean isRoot(No n){
+        return n == raiz;
+    }
+
+    public void addChild(No n, Object o){}
+    
+    public Object remove(No n){}
+
+    public void swapElements(No n, No m){}
+
     public int depth(No n){
-        if( n == raiz){
+        if(isRoot(n)){
             return 0;
         }else{
             return 1 + depth(n.parent())
         }
     }
 
-    public int height(){
-        // exercício
+    private int depthRecursive(No n){}
+
+    public int height(){}
+
+
+    public Iterator elements(){}
+
+    public Iterator nos(){}
+
+    public int size(){
+        return tamanho;
     }
 
     public boolean isEmpty(){
@@ -31,10 +65,5 @@ class ArvoreGenerica{
         return false;
     }
 
-    public No root(){
-        return this.raiz;
-    }
-
-    
-
+    public Object replace(No n, Object o){} 
 }
