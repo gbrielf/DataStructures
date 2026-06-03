@@ -1,5 +1,5 @@
 package ArvoreGenerica;
-import java.utils.ArrayList;
+import java.util.ArrayList;
 import java.utils.Iterator;
 
 class ArvoreGenerica{
@@ -16,7 +16,7 @@ class ArvoreGenerica{
     }
 
     public No parent(No n){
-        return (v.parent());
+        return (n.parent());
     }
 
     public Iterator children(No n){
@@ -24,11 +24,11 @@ class ArvoreGenerica{
     }
 
     public boolean isInternal(No n){
-        return (n.getFilhos().length() != 0);
+        return (n.childrenNumber() != 0);
     }
     
     public boolean isExternal(No n){
-        return (n.getFilhos().length() == 0);
+        return (n.childrenNumber() == 0);
     }
 
     public boolean isRoot(No n){
@@ -42,7 +42,7 @@ class ArvoreGenerica{
     public void swapElements(No n, No m){}
 
     public int depth(No n){
-        profundidade = depthRecursive(n);
+        int profundidade = depthRecursive(n);
         
         return profundidade;
     }
@@ -51,7 +51,7 @@ class ArvoreGenerica{
         if(isRoot(n)){
             return 0;
         }else{
-            return 1 + depthRecursive(n.parent())
+            return 1 + depthRecursive(n.parent());
         }
     }
 
@@ -87,11 +87,9 @@ class ArvoreGenerica{
 
         No noSelecionado = raiz;
 
-        elementos.add(noSelecionado);
+        Iterator resultado = preOrder(noSelecionado, elementos);
 
-        preOrder(noSelecionado, elementos);
-
-        return elementos.iterator();
+        return resultado;
 
     }
 
@@ -108,6 +106,8 @@ class ArvoreGenerica{
             No filho = filhos.next();
             preOrder(filho, list);
         }
+        
+        return list.iterator();
     }
     
     public Iterator posOrder(No n, ArrayList list){
