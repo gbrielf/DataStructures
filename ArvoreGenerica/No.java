@@ -12,16 +12,16 @@ public class No{
         this.o = o;
     }
 
-    public Object element(){
+    public Object getElement(){
         return o;
-    }
-
-    public No parent(){
-        return pai;
     }
 
     public void setElement(Object o){
         this.o = o;
+    }
+
+    public No getParent(){
+        return pai;
     }
 
     public void addChild(No o){
