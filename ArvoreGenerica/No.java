@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class No{
     private Object o;
     private No pai;
-    private ArrayList filhos = new ArrayList();
+    private ArrayList<No> filhos = new ArrayList<No>();
     
     public No(No pai, Object o){
         this.pai = pai;
@@ -24,13 +24,17 @@ public class No{
         return pai;
     }
 
-    public void addChild(No o){
+    public void setParent(No n){
+        this.pai = n;
+    }
+
+    public void setChild(No o){
         // método de lista duplamente ligada
         filhos.add(o);
     }
 
     public void removeChild(No o){
-        // método de lista duplamente ligada
+        // método remove de Array List nativo do Java
         filhos.remove(o);
     }
 
@@ -38,7 +42,7 @@ public class No{
         return filhos.size();
     }
 
-    public Iterator children(){
+    public Iterator<No> getChildren(){
         return filhos.iterator();
     }
 
