@@ -2,7 +2,8 @@ package ArvoreGenerica;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-class ArvoreGenerica{
+
+class ArvoreGenerica implements Arvore{
     public No raiz;
     public int tamanho;
 
@@ -55,7 +56,7 @@ class ArvoreGenerica{
         return novoNo;
     }
 
-    public Iterator children(No n){
+    public Iterator<No> children(No n){
         return n.getChildren();
     }
 
@@ -73,7 +74,7 @@ class ArvoreGenerica{
             throw new InvalidTreePositionException("Nó inválido: nulo");
         }
         else if(isRoot(n)){
-            throw new InvalidTreePositionException("A árvore está vazia e só possui a raiz, a raiz não pode ser removida.")
+            throw new InvalidTreePositionException("A árvore está vazia e só possui a raiz, a raiz não pode ser removida.");
         }
 
         No pai = n.getParent();
@@ -111,7 +112,7 @@ class ArvoreGenerica{
     public int height(No n){
         // se (isExternal(v))
         if(isEmpty()){
-            throw new EmptyTreeException("A árvore está vazia, altura zero.")
+            throw new EmptyTreeException("A árvore está vazia, altura zero.");
         }
         if(isExternal(n)){
             // retorne 0
@@ -136,14 +137,17 @@ class ArvoreGenerica{
     }
 
 
-    public Iterator<No> elements(){
-        ArrayList<No> elementos = new ArrayList<>();
+    public Iterator<Object> elements(){
+        ArrayList<Object> elementos = new ArrayList<>();
 
-        No noSelecionado = raiz;
+        Iterator<No> nos = nos();
 
-        Iterator<No> resultado = preOrder(noSelecionado, elementos);
+        while(nos.hasNext()){
+            No no = nos.next();
+            elementos.add(no.getElement());
+        }
 
-        return resultado;
+        return elementos.iterator();
 
     }
 
@@ -164,15 +168,43 @@ class ArvoreGenerica{
         return list.iterator();
     }
     
-    public Iterator<No> posOrder(No n, ArrayList list){
+    public Iterator<No> posOrder(No n, ArrayList<No> list){
+        if(n == null){
+            return list.iterator();
+        }
+        
+        Iterator<No> filhos = n.getChildren();
 
+        while(filhos.hasNext()){
+            No filho = filhos.next();
+            posOrder(filho, list);
+        }
+
+        list.add(n);
+
+        return list.iterator();
     }
 
-    public Iterator nos(){
+    public Iterator<No> nos(){
+        if(isEmpty()){
+            throw new EmptyTreeException("A árvore está vazia");
+        }
 
+        ArrayList<No> list = new ArrayList<No>();
+
+        Iterator<No> resultado = preOrder(this.raiz,list);
+
+        return resultado;
     }
 
     public Object replace(No n, Object o){
+        if(n == null){
+            throw new InvalidTreePositionException("Nó inválido: nulo.");
+        }
+        Object resultado = n.getElement();
 
+        n.setElement(o);
+
+        return resultado;
     } 
 }

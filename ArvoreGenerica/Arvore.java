@@ -1,16 +1,17 @@
 package ArvoreGenerica;
+import java.util.Iterator;
 
 public interface Arvore {
     // métodos genéricos
     public int size();  // OK
-    public int height();
+    public int height(No n);
     public boolean isEmpty();  // OK
-    public Itarator elements();
-    public Iterator nos();
+    public Iterator<Object> elements();
+    public Iterator<No> nos();
     // métodos de acesso
-    public No root();  // OK
+    public No getRoot();  // OK
     public No parent(No n);
-    public Iterator children(No n);
+    public Iterator<No> children(No n);
     // métodos de consulta
     public boolean isInternal(No n);
     public boolean isExternal(No n);
