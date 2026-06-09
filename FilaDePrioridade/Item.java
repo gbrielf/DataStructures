@@ -1,6 +1,6 @@
 public class Item<T>{
     private int chave;
-    private Object elemento;  
+    private T elemento;  
     
     public Item(int chave, T elemento){
         this.elemento = elemento;   
@@ -11,7 +11,7 @@ public class Item<T>{
         return this.chave;
     }
 
-    public T getElemento(){
+    public Object getElemento(){
         return this.elemento;
     }
 }
