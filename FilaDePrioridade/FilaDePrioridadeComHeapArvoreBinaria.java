@@ -1,5 +1,8 @@
 package FilaDePrioridade;
 
+import ArvoreBinariaDePesquisa.Item;
+import ArvoreBinariaDePesquisa.No;
+
 public class FilaDePrioridadeComHeapArvoreBinaria<T> implements FilaDePrioridade{
     private No<T> raiz;
     private No<T> ultimo;
@@ -23,7 +26,7 @@ public class FilaDePrioridadeComHeapArvoreBinaria<T> implements FilaDePrioridade
         return raiz.item.getKey();
     }
 
-    public void insert(int k, Object o){
+    public void insert(iArvoreGenerica/ArvoreGenerica.javant k, Object o){
 
         Item<T> novoItem = new Item(k,o);
 
