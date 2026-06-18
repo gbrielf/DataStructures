@@ -1,3 +1,5 @@
+import ArvoreBinariaDePesquisa.No;
+
 class FilaComListaLigada{
     private No inicio;
     private No fim;

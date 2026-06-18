@@ -1,4 +1,4 @@
-package FilaDePrioridade;
+package ArvoreBinariaDePesquisa;
 
 public class No<T> {
     Item<T> item;
@@ -15,6 +15,14 @@ public class No<T> {
     
     public boolean isRoot(){
         return this.pai == null;
+    }
+
+    public boolean isExternal(){
+        return filhoDireito == null && filhoEsquerdo == null;
+    }
+
+    public boolean isInternal(){
+        return !isExternal();
     }
 
     public Item<T> getItem(){
@@ -60,4 +68,5 @@ public class No<T> {
             return false;
         return this.pai.filhoDireito == this;
     }
+
 }

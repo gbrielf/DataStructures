@@ -2,7 +2,7 @@ package ArvoreGenerica;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ArvoreGenerica{
+public class ArvoreGenerica implements Arvore<No>{
     protected No raiz;
     protected int tamanho;
 

@@ -1,8 +1,8 @@
-package FilaDePrioridade;
+package ArvoreBinariaDePesquisa;
 
 public class Item<T>{
-    private int chave;
-    private T elemento;  
+    protected int chave;
+    protected T elemento;  
     
     public Item(int chave, T elemento){
         this.elemento = elemento;   
