@@ -13,7 +13,7 @@ public class Item<T>{
         return this.chave;
     }
 
-    public T getElemento(){
+    public Object getElemento(){
         return this.elemento;
     }
 
