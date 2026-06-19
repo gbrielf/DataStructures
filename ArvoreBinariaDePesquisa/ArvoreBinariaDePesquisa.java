@@ -34,12 +34,16 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
 
     @Override 
     public int depth(No<T> n){
+    @Override public boolean isEmpty() { return raiz == null; }
+
+    @Override public int depth(No<T> n){
         if(isRoot(n)) return 0;
         return 1 + depth(n.getParent());
     }
 
     @Override 
     public int height(){
+    @Override public int height(){
         return height(raiz);
     }
 

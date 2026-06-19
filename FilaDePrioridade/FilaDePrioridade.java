@@ -1,3 +1,5 @@
+package FilaDePrioridade;
+
 interface FilaDePrioridade{
     public void insert(int k, Object o);
     public Object removeMin();

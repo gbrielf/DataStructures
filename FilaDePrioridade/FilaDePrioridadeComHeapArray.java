@@ -1,4 +1,6 @@
-public class FilaDePrioridadeComHeapArray{
+package FilaDePrioridade;
+
+public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
     private int tamanho;
     private Item[] a;
     private int capacidade;
@@ -11,7 +13,7 @@ public class FilaDePrioridadeComHeapArray{
 
     public void insert(int k, Object o){
         if(tamanho > capacidade){
-            throw new RuntimeException("Fila cheia!")
+            throw new RuntimeException("Fila cheia!");
         }
         
         Item novoItem = new Item(k, o);
@@ -23,8 +25,8 @@ public class FilaDePrioridadeComHeapArray{
         while(i>1){
             int pai = i/2;
 
-            if(a[pai].getChave() <= a[i].getChave()){
-                break
+            if(a[pai].getKey() <= a[i].getKey()){
+                break;
             }
 
             Item aux = a[i];
@@ -42,7 +44,7 @@ public class FilaDePrioridadeComHeapArray{
             throw new OrderQueueIsEmptyException("A fila está vazia.");
         }
 
-        Object resultado = a[1];
+        Item<?> resultado = a[1];
         
         a[1] = a[tamanho-1];
         a[tamanho-1] = null;
@@ -62,16 +64,16 @@ public class FilaDePrioridadeComHeapArray{
 
             int menorFilho = esquerda;
 
-            if (direita < tamanho && a[direita].getChave() < a[esquerda].getChave()){
+            if (direita < tamanho && a[direita].getKey() < a[esquerda].getKey()){
                 menorFilho = direita;
             }
 
             // raiz nova é menor que os dois filhos
-            if(a[i].getChave() <= a[menorFilho].getChave()){
+            if(a[i].getKey() <= a[menorFilho].getKey()){
                 break;
             }
 
-            Object aux = a[i];
+            Item<?> aux = (Item<?>) a[i];
             a[i] = a[menorFilho];
             a[menorFilho] = aux;
 
@@ -86,12 +88,13 @@ public class FilaDePrioridadeComHeapArray{
             throw new OrderQueueIsEmptyException("A filha está vazia.");
         }
 
-        return a[1].getElemento();
+        return a[1].getKey();
     }
+
     public int size(){
         return this.tamanho - 1;
     }
     public boolean isEmpty(){
-        if tamanho == 1;
+        return tamanho == 1;
     }
 }

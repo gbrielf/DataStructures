@@ -2,10 +2,9 @@ package ArvoreGenerica;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-class ArvoreGenerica implements Arvore{
-    public No raiz;
-    public int tamanho;
+public class ArvoreGenerica implements Arvore<No>{
+    protected No raiz;
+    protected int tamanho;
 
     public ArvoreGenerica(Object o){
         this.raiz = new No(null, o);
