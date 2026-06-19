@@ -7,11 +7,11 @@ public interface Arvore<N>{
     public int height();
     public boolean isEmpty();  // OK
     public Iterator elements();
-    public Iterator Ns();
+    public Iterator nos();
     // métodos de acesso
-    public N root();  // OK
-    public N parent(N n);
-    public Iterator children(N n);
+    public No getRoot();  // OK
+    public No parent(No n);
+    public Iterator<No> children(No n);
     // métodos de consulta
     public boolean isInternal(N n);
     public boolean isExternal(N n);

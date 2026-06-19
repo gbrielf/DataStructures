@@ -1,4 +1,6 @@
 package ArvoreBinariaDePesquisa;
+import java.util.Iterator;
+import java.util.ArrayList;
 import ArvoreGenerica.Arvore;
 
 
@@ -27,6 +29,11 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         return 1 + size(n.getLeftChild()) + size(n.getRightChild());
     }
 
+    @Override 
+    public boolean isEmpty() { return raiz == null; }
+
+    @Override 
+    public int depth(No<T> n){
     @Override public boolean isEmpty() { return raiz == null; }
 
     @Override public int depth(No<T> n){
@@ -34,6 +41,8 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         return 1 + depth(n.getParent());
     }
 
+    @Override 
+    public int height(){
     @Override public int height(){
         return height(raiz);
     }
@@ -113,10 +122,62 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         }
     }
 
+    // incompleto
     public Item<T> remove(int chave) { 
         No<T> noAlvo = search(chave);
         
+        // caso a árvore seja vazia ou noAlvo seja null
+        if(isEmpty() || noAlvo == null){
+            return null; // chave não existe
+        }
+        
+        // se no alvo for o raiz
+        if(noAlvo == raiz){
+            No<T> menorNo = smallestNode(noAlvo);
+            
+            Item<T> itemAlvo = menorNo.getItem();
+            
+            // se menor nó tiver um filho direito, ele não pode ter um esquerdo pois já é o menor
+            if(menorNo.getRightChild() != null){
+                menorNo.getRightChild().setParent(menorNo.getParent());
+                menorNo.getParent().setLeftChild(menorNo.getRightChild());
+            
+                // se menor nó não tiver filho
+            } else {
+                menorNo.getParent().setLeftChild(null);
+            }
 
+            noAlvo.setItem(menorNo.getItem());
+
+            return itemAlvo;
+        }
+
+        // se for interno com dois filhos
+        if(isInternal(noAlvo) && noAlvo.getRightChild() != null && noAlvo.getLeftChild() != null){
+            Item<T> itemAlvo = noAlvo.getItem();
+        
+            noAlvo.getLeftChild().setParent(noAlvo.getParent());
+            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
+
+            noAlvo.getRightChild().setParent(noAlvo.getParent());
+            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
+            
+            return itemAlvo;
+        }
+
+        // se for nó interno e só tiver filho esquerdo
+        else if(isInternal(noAlvo) && noAlvo.getRightChild() == null){
+            noAlvo.getLeftChild().setParent(noAlvo.getParent());
+            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
+        }
+
+        // se for nó interno e só tiver filho direito
+        else if(isInternal(noAlvo) && noAlvo.getLeftChild() == null){
+            noAlvo.getRightChild().setParent(noAlvo.getParent());
+            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
+        }
+
+        // se for nó externo
         if(isExternal(noAlvo)){
             if(noAlvo.isLeftChild()){
                 Item<T> itemRemovido = noAlvo.getItem();
@@ -134,5 +195,71 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
             }
         }
         return null;
+    }
+
+    @Override
+    public Iterator nos(){
+        ArrayList<No<T>> list = new ArrayList<>();
+        inOrder(raiz, list);
+
+        return list.iterator();
+    }
+
+    public void inOrder(No<T> n, ArrayList<No<T>> list){
+        if(n == null) return;
+        
+        inOrder(n.getLeftChild(), list);  // esquerda
+        
+        list.add(n);                       // raiz
+        
+        inOrder(n.getRightChild(), list); // direita        
+    }
+
+    @Override
+    public Iterator elements(){
+        ArrayList<No<T>> nos = new ArrayList<>();
+        
+        inOrder(raiz, nos);
+
+        ArrayList<Item<T>> itens = new ArrayList<>();
+        
+        for(No<T> no : nos){
+            itens.add(no.getItem());
+        }
+        
+        return itens.iterator();
+    }
+
+
+    @Override
+    public Iterator children(No<T> n){
+        ArrayList<No<T>> filhos = new ArrayList<>();
+        if(n.getLeftChild() != null) filhos.add(n.getLeftChild());
+        if(n.getRightChild() != null) filhos.add(n.getRightChild());
+        return filhos.iterator();
+    }
+
+      @Override
+    public Object replace(No<T> n, Object o){
+        Item<T> itemAntigo = n.getItem();
+        n.setItem((Item<T>)o);
+        return itemAntigo;
+    }
+
+    public No<T> smallestNode(No<T> n){
+        if(n == null){
+            return null;
+        }
+        if(n.getRightChild() != null){
+            n = n.getRightChild();
+            while(n.getLeftChild() != null){
+                n = n.getLeftChild();
+            }
+            return n;
+        }
+        else{
+            return n;
+        }
+
     }
 }
