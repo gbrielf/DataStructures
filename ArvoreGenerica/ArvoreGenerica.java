@@ -19,7 +19,6 @@ class ArvoreGenerica implements Arvore{
     public boolean isEmpty(){
         // sempre será falso porque não permite deletar o raiz
         return tamanho == 0;
-    }
 
     public No getRoot() throws EmptyTreeException {
         if(isEmpty()){
@@ -106,6 +105,11 @@ class ArvoreGenerica implements Arvore{
         } else {
             return 1 + depthRecursive(n.getParent());
         }
+    }
+
+    @Override
+    public int height(){
+        return height(this.raiz);
     }
 
     // Algoritmo altura(v) – O(n)

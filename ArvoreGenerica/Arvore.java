@@ -4,10 +4,10 @@ import java.util.Iterator;
 public interface Arvore {
     // métodos genéricos
     public int size();  // OK
-    public int height(No n);
+    public int height();
     public boolean isEmpty();  // OK
-    public Iterator<Object> elements();
-    public Iterator<No> nos();
+    public Iterator elements();
+    public Iterator nos();
     // métodos de acesso
     public No getRoot();  // OK
     public No parent(No n);
