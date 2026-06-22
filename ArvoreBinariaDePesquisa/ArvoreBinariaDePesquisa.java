@@ -12,7 +12,7 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         raiz = new No<> (item, null);
     }
 
-    @Override public No<T> root(){ return raiz; }
+    @Override public No getRoot(){ return raiz; }
 
     @Override public No<T> parent(No<T> n){ return n.getParent(); }
 
@@ -29,11 +29,6 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         return 1 + size(n.getLeftChild()) + size(n.getRightChild());
     }
 
-    @Override 
-    public boolean isEmpty() { return raiz == null; }
-
-    @Override 
-    public int depth(No<T> n){
     @Override public boolean isEmpty() { return raiz == null; }
 
     @Override public int depth(No<T> n){
@@ -41,8 +36,6 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
         return 1 + depth(n.getParent());
     }
 
-    @Override 
-    public int height(){
     @Override public int height(){
         return height(raiz);
     }

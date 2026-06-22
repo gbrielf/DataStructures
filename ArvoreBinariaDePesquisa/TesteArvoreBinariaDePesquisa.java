@@ -1,6 +1,6 @@
 package ArvoreBinariaDePesquisa;
+import ArvoreBinariaDePesquisa.No;
 import java.util.Iterator;
-import ArvoreGenerica.No;
 
 public class TesteArvoreBinariaDePesquisa {
     public static void main(String[] args) {
@@ -36,12 +36,12 @@ public class TesteArvoreBinariaDePesquisa {
         System.out.println(); // 3 5 7 10 12 15 20
 
         // ── profundidade ──────────────────────────────
-        System.out.println("Depth raiz: " + abp.depth(abp.root())); // 0
+        System.out.println("Depth raiz: " + abp.depth(abp.getRoot())); // 0
         System.out.println("Depth 7:    " + abp.depth(abp.search(7))); // 2
 
         // ── filhos da raiz ────────────────────────────
         System.out.print("Filhos da raiz: ");
-        Iterator filhos = abp.children(abp.root());
+        Iterator filhos = abp.children(abp.getRoot());
         while(filhos.hasNext()){
             No<String> filho = (No<String>) filhos.next();
             System.out.print(filho.getItem().getKey() + " ");
