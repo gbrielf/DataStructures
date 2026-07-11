@@ -7,11 +7,11 @@ public interface Hash<K, V> {
     
     public V removeElement(K key);
 
-    public void insertItem(K key, V element);
+    public void insertItem(K key, V element); // OK
 
-    public int size();
+    public int size(); // OK
 
-    public boolean isEmpty();
+    public boolean isEmpty(); // OK
 
     public Iterator<K> keys();
 
