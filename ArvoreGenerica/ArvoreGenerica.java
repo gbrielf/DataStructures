@@ -2,7 +2,7 @@ package ArvoreGenerica;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ArvoreGenerica implements Arvore<No>{
+public class ArvoreGenerica implements Arvore<No, Object>{
     protected No raiz;
     protected int tamanho;
 
@@ -18,6 +18,8 @@ public class ArvoreGenerica implements Arvore<No>{
     public boolean isEmpty(){
         // sempre será falso porque não permite deletar o raiz
         return tamanho == 0;
+    
+    }
 
     public No getRoot() throws EmptyTreeException {
         if(isEmpty()){

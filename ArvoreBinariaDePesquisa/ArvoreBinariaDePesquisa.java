@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import ArvoreGenerica.Arvore;
 
 
-public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
-    private No<T> raiz;
-    private int tamanho;
+public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
+    private No<T> raiz;    
     
     public ArvoreBinariaDePesquisa(Item<T> item){
         raiz = new No<> (item, null);
     }
 
-    @Override public No getRoot(){ return raiz; }
+    @Override public No<T> getRoot(){ return raiz; }
 
     @Override public No<T> parent(No<T> n){ return n.getParent(); }
 
@@ -191,7 +190,7 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
     }
 
     @Override
-    public Iterator nos(){
+    public Iterator<No<T>> nos(){
         ArrayList<No<T>> list = new ArrayList<>();
         inOrder(raiz, list);
 
@@ -209,7 +208,7 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
     }
 
     @Override
-    public Iterator elements(){
+    public Iterator<Item<T>> elements(){
         ArrayList<No<T>> nos = new ArrayList<>();
         
         inOrder(raiz, nos);
@@ -225,17 +224,22 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>>{
 
 
     @Override
-    public Iterator children(No<T> n){
+    public Iterator<No<T>> children(No<T> n){
         ArrayList<No<T>> filhos = new ArrayList<>();
+
         if(n.getLeftChild() != null) filhos.add(n.getLeftChild());
+
         if(n.getRightChild() != null) filhos.add(n.getRightChild());
+
         return filhos.iterator();
     }
 
-      @Override
-    public Object replace(No<T> n, Object o){
+    @Override
+    public Object replace(No<T> n, Item<T> o){
         Item<T> itemAntigo = n.getItem();
+        
         n.setItem((Item<T>)o);
+        
         return itemAntigo;
     }
 
