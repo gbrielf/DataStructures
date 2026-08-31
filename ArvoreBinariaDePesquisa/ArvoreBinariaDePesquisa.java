@@ -209,13 +209,12 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
 
     @Override
     public Iterator<Item<T>> elements(){
-        ArrayList<No<T>> nos = new ArrayList<>();
-        
-        inOrder(raiz, nos);
+        Iterator<No<T>> nos = nos();
 
         ArrayList<Item<T>> itens = new ArrayList<>();
         
-        for(No<T> no : nos){
+        while(nos.hasNext()){
+            No<T> no = nos.next();
             itens.add(no.getItem());
         }
         
