@@ -207,6 +207,24 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         inOrder(n.getRightChild(), list); // direita        
     }
 
+    public void preOrder(No<T> n, ArrayList<No<T>> list){
+        if(n == null) return;
+
+        list.add(n);
+
+        preOrder(n.getLeftChild(), list);
+        preOrder(n.getRightChild(), list);
+    }
+
+    public void posOrder(No<T> n, ArrayList<No<T>> list){
+        if(n == null) return;
+
+        posOrder(n.getLeftChild(), list);
+        posOrder(n.getRightChild(), list);
+
+        list.add(n);
+    }
+
     @Override
     public Iterator<Item<T>> elements(){
         Iterator<No<T>> nos = nos();
@@ -246,10 +264,10 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         if(n == null){
             return null;
         }
-        if(n.getRightChild() != null){
-            n = n.getRightChild();
-            while(n.getLeftChild() != null){
-                n = n.getLeftChild();
+        if(n.getLeftChild() != null){
+            n = n.getLeftChild();
+            while(n.getRightChild() != null){
+                n = n.getRightChild();
             }
             return n;
         }
