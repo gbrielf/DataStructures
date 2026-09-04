@@ -39,12 +39,12 @@ public class No<T> {
         return this.filhoDireito;
     }
 
+    public No<T> getLeftChild() {
+            return this.filhoEsquerdo;
+    }
+        
     public void setRightChild(No<T> filhoDireito) {
         this.filhoDireito = filhoDireito;
-    }
-
-    public No<T> getLeftChild() {
-        return this.filhoEsquerdo;
     }
 
     public void setLeftChild(No<T> filhoEsquerdo) {
