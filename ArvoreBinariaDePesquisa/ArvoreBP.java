@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import ArvoreGenerica.Arvore;
 
 
-public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
+public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
     private No<T> raiz;    
     
-    public ArvoreBinariaDePesquisa(Item<T> item){
+    public ArvoreBP(Item<T> item){
         raiz = new No<> (item, null);
     }
 
@@ -39,7 +39,11 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         return height(raiz);
     }
 
-    private int height(No<T> n){
+    protected No<T> createNode(Item<T> item, No<T> parent){
+        return new No<T>(item, parent);
+    }
+
+    protected int height(No<T> n){
         if(isExternal(n)) return 0;
         int h = 0;
         if(n.getLeftChild() != null){
@@ -93,16 +97,18 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         }
     }
     
-    public void insert( Item<T> item) { 
-        No<T> novoNo = new No<>(item, null);
+    public No<T> insert( Item<T> item) { 
+        No<T> novoNo = createNode(item, null);
+
         if(raiz == null){
             raiz = novoNo;
-            return;
+            return raiz;
         }
+
         No<T> noPai = searchParent(item.getKey());
 
         if(noPai == null){
-            return; // chave não existe
+            throw new RuntimeException("A chave não existe"); // chave não existe
         }
 
         novoNo.setParent(noPai);
@@ -112,6 +118,8 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         }else{
             noPai.setLeftChild(novoNo);
         }
+
+        return novoNo;
     }
 
     // incompleto
