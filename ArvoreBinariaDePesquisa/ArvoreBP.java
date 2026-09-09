@@ -124,67 +124,65 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
 
     // incompleto
     public Item<T> remove(int chave) { 
-        No<T> noAlvo = search(chave);
-        
-        // caso a árvore seja vazia ou noAlvo seja null
-        if(isEmpty() || noAlvo == null){
-            return null; // chave não existe
-        }
+            No<T> noAlvo = search(chave);
 
-        Item<T> itemAlvo = noAlvo.getItem();
-        
-        // se no alvo tiver dois filhos (raiz ou não)
-        if(noAlvo.getLeftChild() != null && noAlvo.getRightChild() != null){
-            No<T> menorNoSubstituto = smallestNode(noAlvo);
-
-            // menorNoSubstituto já é o menor nó da subarvore direita, logo ele só pode ter filho direito(tem valor maior q o dele)
-            // se menor nó tiver um filho direito, ele não pode ter um esquerdo pois já é o menor
-            // adaptando local do menorNoSubstituto para poder realocalo para o lugar do no removido
-            if(menorNoSubstituto.getRightChild() != null){
-                menorNoSubstituto.getRightChild().setParent(menorNoSubstituto.getParent());
+            if(isEmpty() || noAlvo == null){
+                return null;
             }
-            if(menorNoSubstituto.isLeftChild()){
-                menorNoSubstituto.getParent().setLeftChild(menorNoSubstituto.getRightChild());
-            }else{
-                menorNoSubstituto.getParent().setRightChild(menorNoSubstituto.getRightChild());
-            }
-
-            noAlvo.setItem(menorNoSubstituto.getItem());
-
-            return itemAlvo;
-        }
-
-        // se no alvo tiver 0 ou 1 filho
-        else{
-            No<T> filhoUnico;
             
-            if(noAlvo.getLeftChild() != null){
-                filhoUnico = noAlvo.getLeftChild();
-            } else if(noAlvo.getRightChild() != null){
-                filhoUnico = noAlvo.getRightChild();
-            } else {
-                filhoUnico = null; // noAlvo é folha
-            }
-
-            if(noAlvo == raiz){
-                if(filhoUnico != null){
-                    filhoUnico.setParent(null);
-                }
-                raiz = filhoUnico;
-            } else {
-                if(filhoUnico != null){
-                    filhoUnico.setParent(noAlvo.getParent());
-                }
-                if(noAlvo.isLeftChild()){
-                    noAlvo.getParent().setLeftChild(filhoUnico);
-                } else {
-                    noAlvo.getParent().setRightChild(filhoUnico);
-                }
-            }
-
+            Item<T> itemAlvo = noAlvo.getItem();
+            
+            raiz = removeRec(raiz, chave);
+            
             return itemAlvo;
         }
+
+    private No<T> removeRec(No<T> atual, int chave){
+        if(atual == null){
+            return null;
+        }
+
+        if(chave < atual.getItem().getKey()){
+            No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
+            
+            atual.setLeftChild(novoEsquerdo);
+        
+            if(novoEsquerdo != null){
+                novoEsquerdo.setParent(atual);
+            }
+        }
+        else if(chave > atual.getItem().getKey()){
+            No<T> novoDireito = removeRec(atual.getRightChild(), chave);
+        
+            atual.setRightChild(novoDireito);
+        
+            if(novoDireito != null){
+                novoDireito.setParent(atual);
+            }
+        }
+        // equivalente a chave == atual.getItem().getKey()
+        else{
+            // achou o nó com nenhum ou algum filho ou 2 filhos
+            if(atual.getLeftChild() == null){
+                return atual.getRightChild(); // pode ser null
+            }
+            else if(atual.getRightChild() == null){
+                return atual.getLeftChild();
+            }
+            else{
+                No<T> sucessor = smallestNode(atual);
+                atual.setItem(sucessor.getItem);
+                No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
+                 
+                if(novoDireito != null){
+                    novoDireito.setParent(atual)
+                };
+            }
+        }
+
+        return atual;
     }
+}
 
     @Override
     public Iterator<No<T>> nos(){

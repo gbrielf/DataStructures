@@ -22,8 +22,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
     }
 
     public void removeAVL(int chave) {
-        Item<T> itemRemovido = remove(chave);
+        No<T> itemRemovido = removeRec(chave);
 
+        updateBalance(itemRemovido);
     }
 
     public void updateBalance(No<T> n) {
