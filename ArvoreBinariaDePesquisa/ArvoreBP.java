@@ -130,71 +130,60 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         if(isEmpty() || noAlvo == null){
             return null; // chave não existe
         }
+
+        Item<T> itemAlvo = noAlvo.getItem();
         
-        // se no alvo for o raiz
-        if(noAlvo == raiz){
-            No<T> menorNo = smallestNode(noAlvo);
-            
-            Item<T> itemAlvo = menorNo.getItem();
-            
+        // se no alvo tiver dois filhos (raiz ou não)
+        if(noAlvo.getLeftChild() != null && noAlvo.getRightChild() != null){
+            No<T> menorNoSubstituto = smallestNode(noAlvo);
+
+            // menorNoSubstituto já é o menor nó da subarvore direita, logo ele só pode ter filho direito(tem valor maior q o dele)
             // se menor nó tiver um filho direito, ele não pode ter um esquerdo pois já é o menor
-            if(menorNo.getRightChild() != null){
-                menorNo.getRightChild().setParent(menorNo.getParent());
-                menorNo.getParent().setLeftChild(menorNo.getRightChild());
+            // adaptando local do menorNoSubstituto para poder realocalo para o lugar do no removido
+            if(menorNoSubstituto.getRightChild() != null){
+                menorNoSubstituto.getRightChild().setParent(menorNoSubstituto.getParent());
+            }
+            if(menorNoSubstituto.isLeftChild()){
+                menorNoSubstituto.getParent().setLeftChild(menorNoSubstituto.getRightChild());
+            }else{
+                menorNoSubstituto.getParent().setRightChild(menorNoSubstituto.getRightChild());
+            }
+
+            noAlvo.setItem(menorNoSubstituto.getItem());
+
+            return itemAlvo;
+        }
+
+        // se no alvo tiver 0 ou 1 filho
+        else{
+            No<T> filhoUnico;
             
-                // se menor nó não tiver filho
+            if(noAlvo.getLeftChild() != null){
+                filhoUnico = noAlvo.getLeftChild();
+            } else if(noAlvo.getRightChild() != null){
+                filhoUnico = noAlvo.getRightChild();
             } else {
-                menorNo.getParent().setLeftChild(null);
+                filhoUnico = null; // noAlvo é folha
             }
 
-            noAlvo.setItem(menorNo.getItem());
+            if(noAlvo == raiz){
+                if(filhoUnico != null){
+                    filhoUnico.setParent(null);
+                }
+                raiz = filhoUnico;
+            } else {
+                if(filhoUnico != null){
+                    filhoUnico.setParent(noAlvo.getParent());
+                }
+                if(noAlvo.isLeftChild()){
+                    noAlvo.getParent().setLeftChild(filhoUnico);
+                } else {
+                    noAlvo.getParent().setRightChild(filhoUnico);
+                }
+            }
 
             return itemAlvo;
         }
-
-        // se for interno com dois filhos
-        if(isInternal(noAlvo) && noAlvo.getRightChild() != null && noAlvo.getLeftChild() != null){
-            Item<T> itemAlvo = noAlvo.getItem();
-        
-            noAlvo.getLeftChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
-
-            noAlvo.getRightChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
-            
-            return itemAlvo;
-        }
-
-        // se for nó interno e só tiver filho esquerdo
-        else if(isInternal(noAlvo) && noAlvo.getRightChild() == null){
-            noAlvo.getLeftChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
-        }
-
-        // se for nó interno e só tiver filho direito
-        else if(isInternal(noAlvo) && noAlvo.getLeftChild() == null){
-            noAlvo.getRightChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
-        }
-
-        // se for nó externo
-        if(isExternal(noAlvo)){
-            if(noAlvo.isLeftChild()){
-                Item<T> itemRemovido = noAlvo.getItem();
-        
-                noAlvo.getParent().setLeftChild(null);
-        
-                return itemRemovido;
-            }
-            else{
-                Item<T> itemRemovido = noAlvo.getItem();
-        
-                noAlvo.getParent().setRightChild(null);
-        
-                return itemRemovido;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -272,10 +261,10 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         if(n == null){
             return null;
         }
-        if(n.getLeftChild() != null){
-            n = n.getLeftChild();
-            while(n.getRightChild() != null){
-                n = n.getRightChild();
+        if(n.getRightChild() != null){
+            n = n.getRightChild();
+            while(n.getLeftChild() != null){
+                n = n.getLeftChild();
             }
             return n;
         }

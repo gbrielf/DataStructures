@@ -21,7 +21,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
         updateBalance(noInserido);
     }
 
-    public void removeAVL(int chave) {}
+    public void removeAVL(int chave) {
+        Item<T> itemRemovido = remove(chave);
+
+    }
 
     public void updateBalance(No<T> n) {
         No<T> noPai = (No<T>) n.getParent();
