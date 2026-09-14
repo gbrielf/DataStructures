@@ -56,15 +56,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
 
             // ENCONTROU O NÓ QUE SERÁ REMOVIDO
             if (atual.getLeftChild() == null) {
-
-                /* Eu tentava descobrir o pai depois da chamada recursiva,
-                 usando novoEsquerdo.getParent().
-                
-                 Porém, quando atual é uma folha, novoEsquerdo pode ser null.
-                 Além disso, o pai importante é o pai do nó fisicamente removido.
-                
-                 Capturei a referência antes de retornar o filho
-                */
+                // Quando atual é uma folha, novoEsquerdo pode ser null.
+                // Além disso, o pai importante é o pai do nó fisicamente removido.
+                // Capturei a referência antes de retornar o filho
                 paiRemovido = (No<T>) atual.getParent();
 
                 ArvoreBinariaDePesquisa.No<T> filho =
@@ -79,11 +73,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
 
             else if (atual.getRightChild() == null) {
 
-                /*
-                * MESMA CORREÇÃO DO CASO ANTERIOR:
-                * Capturamos o pai do nó que será fisicamente removido
-                * antes de retornar o filho.
-                */
+                
+                // Capturamos o pai do nó que será fisicamente removido
+                // antes de retornar o filho.                
                 paiRemovido = (No<T>) atual.getParent();
 
                 ArvoreBinariaDePesquisa.No<T> filho =
@@ -98,31 +90,21 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
 
             else {
 
-                // =================================================
                 // NÓ COM DOIS FILHOS
-                // =================================================
-
                 No<T> sucessor = (No<T>) smallestNode(atual);
 
-                /*
-                * O sucessor não é a raiz da árvore.
-                *
-                * Apenas copiamos o Item do sucessor para o nó atual.
-                */
+                
+                // O sucessor não é a raiz da árvore.
+                // Apenas utilizamos o Item do sucessor no nó atual.
                 atual.setItem(sucessor.getItem());
 
-                /*
-                * ERRO ANTERIOR:
-                * Você criou paiDoSucessor, mas não utilizou a variável.
-                *
-                * O pai que precisamos guardar é o pai do sucessor,
-                * pois é nessa subárvore que ocorrerá a remoção física.
-                */
+                
+                // O pai que precisamos guardar é o pai do sucessor,
+                // pois é nessa subárvore que ocorrerá a remoção física.
                 paiRemovido = (No<T>) sucessor.getParent();
 
-                /*
-                * Agora removemos fisicamente o sucessor da subárvore direita.
-                */
+                
+                // Agora removemos fisicamente o sucessor da subárvore direita.
                 ArvoreBinariaDePesquisa.No<T> novoDireito =
                         removeRec(
                             atual.getRightChild(),
@@ -146,7 +128,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
     }
 
     public void removeAVL(int chave) {
-        // Limpa a referência antes de iniciar uma nova remoção.
+        // Limpa a referência antes de iniciar uma nova remoção,
+        // porque ela pode estar registrando um valor de operações anteriores
         paiRemovido = null;
 
         // removeRec retorna a nova raiz da subárvore.
