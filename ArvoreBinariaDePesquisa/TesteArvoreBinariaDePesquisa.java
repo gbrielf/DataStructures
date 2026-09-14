@@ -6,7 +6,7 @@ public class TesteArvoreBinariaDePesquisa {
     public static void main(String[] args) {
 
         // ── criação ───────────────────────────────────
-        ArvoreBinariaDePesquisa<String> abp = new ArvoreBinariaDePesquisa<>(new Item<>(10, "raiz"));
+        ArvoreBP<String> abp = new ArvoreBP<>(new Item<>(10, "raiz"));
 
         abp.insert(new Item<>(5,  "cinco"));
         abp.insert(new Item<>(15, "quinze"));

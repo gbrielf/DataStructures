@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import ArvoreGenerica.Arvore;
 
 
-public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
-    private No<T> raiz;    
+public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
+    protected  No<T> raiz;    
     
-    public ArvoreBinariaDePesquisa(Item<T> item){
+    public ArvoreBP(Item<T> item){
         raiz = new No<> (item, null);
     }
 
@@ -39,7 +39,11 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         return height(raiz);
     }
 
-    private int height(No<T> n){
+    protected No<T> createNode(Item<T> item, No<T> parent){
+        return new No<T>(item, parent);
+    }
+
+    protected int height(No<T> n){
         if(isExternal(n)) return 0;
         int h = 0;
         if(n.getLeftChild() != null){
@@ -93,101 +97,90 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         }
     }
     
-    public void insert( Item<T> item) { 
-        No<T> novoNo = new No<>(item, null);
-        if(raiz == null){
-            raiz = novoNo;
-            return;
-        }
-        No<T> noPai = searchParent(item.getKey());
+        public No<T> insert( Item<T> item) { 
+            No<T> novoNo = createNode(item, null);
 
-        if(noPai == null){
-            return; // chave não existe
-        }
-
-        novoNo.setParent(noPai);
-        
-        if(item.getKey() > noPai.getItem().getKey()){
-            noPai.setRightChild(novoNo);
-        }else{
-            noPai.setLeftChild(novoNo);
-        }
-    }
-
-    // incompleto
-    public Item<T> remove(int chave) { 
-        No<T> noAlvo = search(chave);
-        
-        // caso a árvore seja vazia ou noAlvo seja null
-        if(isEmpty() || noAlvo == null){
-            return null; // chave não existe
-        }
-        
-        // se no alvo for o raiz
-        if(noAlvo == raiz){
-            No<T> menorNo = smallestNode(noAlvo);
-            
-            Item<T> itemAlvo = menorNo.getItem();
-            
-            // se menor nó tiver um filho direito, ele não pode ter um esquerdo pois já é o menor
-            if(menorNo.getRightChild() != null){
-                menorNo.getRightChild().setParent(menorNo.getParent());
-                menorNo.getParent().setLeftChild(menorNo.getRightChild());
-            
-                // se menor nó não tiver filho
-            } else {
-                menorNo.getParent().setLeftChild(null);
+            if(raiz == null){
+                raiz = novoNo;
+                return raiz;
             }
 
-            noAlvo.setItem(menorNo.getItem());
+            No<T> noPai = searchParent(item.getKey());
 
-            return itemAlvo;
-        }
-
-        // se for interno com dois filhos
-        if(isInternal(noAlvo) && noAlvo.getRightChild() != null && noAlvo.getLeftChild() != null){
-            Item<T> itemAlvo = noAlvo.getItem();
-        
-            noAlvo.getLeftChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
-
-            noAlvo.getRightChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
-            
-            return itemAlvo;
-        }
-
-        // se for nó interno e só tiver filho esquerdo
-        else if(isInternal(noAlvo) && noAlvo.getRightChild() == null){
-            noAlvo.getLeftChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setLeftChild(noAlvo.getLeftChild());
-        }
-
-        // se for nó interno e só tiver filho direito
-        else if(isInternal(noAlvo) && noAlvo.getLeftChild() == null){
-            noAlvo.getRightChild().setParent(noAlvo.getParent());
-            noAlvo.getParent().setRightChild(noAlvo.getRightChild());
-        }
-
-        // se for nó externo
-        if(isExternal(noAlvo)){
-            if(noAlvo.isLeftChild()){
-                Item<T> itemRemovido = noAlvo.getItem();
-        
-                noAlvo.getParent().setLeftChild(null);
-        
-                return itemRemovido;
+            if(noPai == null){
+                throw new RuntimeException("A chave não existe"); // chave não existe
             }
+
+            novoNo.setParent(noPai);
+            
+            if(item.getKey() > noPai.getItem().getKey()){
+                noPai.setRightChild(novoNo);
+            }else{
+                noPai.setLeftChild(novoNo);
+            }
+
+            return novoNo;
+        }
+
+        public Item<T> remove(int chave) { 
+                No<T> noAlvo = search(chave);
+
+                if(isEmpty() || noAlvo == null){
+                    return null;
+                }
+                
+                Item<T> itemAlvo = noAlvo.getItem();
+                
+                raiz = (No<T>) removeRec(raiz, chave);
+                
+                return itemAlvo;
+            }
+
+        protected No<T> removeRec(No<T> atual, int chave){
+            if(atual == null){
+                return null;
+            }
+
+            if(chave < atual.getItem().getKey()){
+                No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
+                
+                atual.setLeftChild(novoEsquerdo);
+            
+                if(novoEsquerdo != null){
+                    novoEsquerdo.setParent(atual);
+                }
+            }
+            else if(chave > atual.getItem().getKey()){
+                No<T> novoDireito = removeRec(atual.getRightChild(), chave);
+            
+                atual.setRightChild(novoDireito);
+            
+                if(novoDireito != null){
+                    novoDireito.setParent(atual);
+                }
+            }
+            // equivalente a chave == atual.getItem().getKey()
             else{
-                Item<T> itemRemovido = noAlvo.getItem();
-        
-                noAlvo.getParent().setRightChild(null);
-        
-                return itemRemovido;
+                // achou o nó com nenhum ou algum filho ou 2 filhos
+                if(atual.getLeftChild() == null){
+                    return atual.getRightChild(); // pode ser null
+                }
+                else if(atual.getRightChild() == null){
+                    return atual.getLeftChild();
+                }
+                else{
+                    No<T> sucessor = smallestNode(atual);
+                    atual.setItem(sucessor.getItem());
+                    No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
+                    
+                    if(novoDireito != null){
+                        novoDireito.setParent(atual);
+                    };
+                }
             }
+
+            return atual;
         }
-        return null;
-    }
 
     @Override
     public Iterator<No<T>> nos(){
@@ -264,10 +257,10 @@ public class ArvoreBinariaDePesquisa<T> implements Arvore<No<T>, Item<T>>{
         if(n == null){
             return null;
         }
-        if(n.getLeftChild() != null){
-            n = n.getLeftChild();
-            while(n.getRightChild() != null){
-                n = n.getRightChild();
+        if(n.getRightChild() != null){
+            n = n.getRightChild();
+            while(n.getLeftChild() != null){
+                n = n.getLeftChild();
             }
             return n;
         }
