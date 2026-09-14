@@ -1,13 +1,11 @@
 package ArvoreAVL;
-import java.util.Iterator;
-import java.util.ArrayList;
 import ArvoreBinariaDePesquisa.ArvoreBP;
 import ArvoreBinariaDePesquisa.Item;
-import ArvoreGenerica.Arvore;
+import ArvoreBinariaDePesquisa.No;
 
 public class ArvoreAVL<T> extends ArvoreBP<T>{
     private int FB;
-    private No<T> paiRemovido;
+    private NoAVL<T> paiRemovido;
 
     public ArvoreAVL(Item<T> item){
         super(item);
@@ -15,13 +13,13 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
     }
 
     @Override
-    protected ArvoreBinariaDePesquisa.No<T> createNode(Item<T> item, ArvoreBinariaDePesquisa.No<T> parent){
-        return new No<T>(item, (No<T>)parent);
+    protected No<T> createNode(Item<T> item, No<T> parent){
+        return new NoAVL<T>(item, (NoAVL<T>)parent);
     }
 
     @Override
-    protected ArvoreBinariaDePesquisa.No<T> removeRec(
-            ArvoreBinariaDePesquisa.No<T> atual,
+    protected No<T> removeRec(
+            No<T> atual,
             int chave) {
 
         if (atual == null) {
@@ -30,8 +28,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
 
         if (chave < atual.getItem().getKey()) {
 
-            ArvoreBinariaDePesquisa.No<T> novoEsquerdo =
-                    removeRec(atual.getLeftChild(), chave);
+            No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
 
             atual.setLeftChild(novoEsquerdo);
 
@@ -42,8 +39,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
         }
         else if (chave > atual.getItem().getKey()) {
 
-            ArvoreBinariaDePesquisa.No<T> novoDireito =
-                    removeRec(atual.getRightChild(), chave);
+            No<T> novoDireito = removeRec(atual.getRightChild(), chave);
 
             atual.setRightChild(novoDireito);
 
@@ -59,10 +55,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
                 // Quando atual é uma folha, novoEsquerdo pode ser null.
                 // Além disso, o pai importante é o pai do nó fisicamente removido.
                 // Capturei a referência antes de retornar o filho
-                paiRemovido = (No<T>) atual.getParent();
+                paiRemovido = (NoAVL<T>) atual.getParent();
 
-                ArvoreBinariaDePesquisa.No<T> filho =
-                        atual.getRightChild();
+                No<T> filho = atual.getRightChild();
 
                 if (filho != null) {
                     filho.setParent(atual.getParent());
@@ -76,10 +71,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
                 
                 // Capturamos o pai do nó que será fisicamente removido
                 // antes de retornar o filho.                
-                paiRemovido = (No<T>) atual.getParent();
+                paiRemovido = (NoAVL<T>) atual.getParent();
 
-                ArvoreBinariaDePesquisa.No<T> filho =
-                        atual.getLeftChild();
+                No<T> filho = atual.getLeftChild();
 
                 if (filho != null) {
                     filho.setParent(atual.getParent());
@@ -91,7 +85,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
             else {
 
                 // NÓ COM DOIS FILHOS
-                No<T> sucessor = (No<T>) smallestNode(atual);
+                NoAVL<T> sucessor = (NoAVL<T>) smallestNode(atual);
 
                 
                 // O sucessor não é a raiz da árvore.
@@ -101,11 +95,11 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
                 
                 // O pai que precisamos guardar é o pai do sucessor,
                 // pois é nessa subárvore que ocorrerá a remoção física.
-                paiRemovido = (No<T>) sucessor.getParent();
+                paiRemovido = (NoAVL<T>) sucessor.getParent();
 
                 
                 // Agora removemos fisicamente o sucessor da subárvore direita.
-                ArvoreBinariaDePesquisa.No<T> novoDireito =
+                No<T> novoDireito =
                         removeRec(
                             atual.getRightChild(),
                             sucessor.getItem().getKey()
@@ -123,7 +117,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
     }
 
     public void insertAVL(Item<T> item) {
-        No<T> noInserido = (No<T>) insert(item);
+        NoAVL<T> noInserido = (NoAVL<T>) insert(item);
         updateBalanceInsert(noInserido);
     }
 
@@ -143,8 +137,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
     }
 
     // 09/09/2026 - atualmente ele só integra o insert, ainda não refatorei o método para agregar o remove
-    public void updateBalanceInsert(No<T> n) {
-        No<T> noPai = (No<T>) n.getParent();
+    public void updateBalanceInsert(NoAVL<T> n) {
+        NoAVL<T> noPai = (NoAVL<T>) n.getParent();
 
         // confere se o nó adicionado não é o raiz
         if(noPai == null){
@@ -167,12 +161,12 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
             balance(noPai);
         // se ele estiver em 1 ou -1 eu tenho que analisar o anteceçor dele (no caso o avô)
         }else{
-            updateBalanceInsert((No<T>) noPai);
+            updateBalanceInsert((NoAVL<T>) noPai);
         }
     }
 
-    public void updateBalanceRemove(No<T> n){
-        No<T> noPai = (No<T>) n.getParent();
+    public void updateBalanceRemove(NoAVL<T> n){
+        NoAVL<T> noPai = (NoAVL<T>) n.getParent();
 
         if (noPai == null){
             return;
@@ -196,6 +190,11 @@ public class ArvoreAVL<T> extends ArvoreBP<T>{
 
     }
 
-    public void balance(No<T> n){}
+    public void balance(NoAVL<T> n){
+        // rotação simples a direita
+        // rotação simples a esquerda
+        // rotação dupla a direita
+        // rotação dupla a esquerda
+    }
     
 }
