@@ -212,6 +212,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
     public void rightRotation(NoAVL<T> n) {
         NoAVL<T> filhoEsquerdo = (NoAVL<T>) n.getLeftChild();
         NoAVL<T> avo = (NoAVL<T>) n.getParent();
+        NoAVL<T> filhoDireitoEsquerdo =
+            (NoAVL<T>) filhoEsquerdo.getRightChild();
 
         // atualiza o pai do filho esquerdo para o avô do nó que será rotacionado
         filhoEsquerdo.setParent(avo);
@@ -222,7 +224,11 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         n.setParent(filhoEsquerdo);
         // atualiza o filho esquerdo do nó que será rotacionado
         // para o filho direito do filho esquerdo dele
-        n.setLeftChild(filhoEsquerdo.getRightChild());
+        n.setLeftChild(filhoDireitoEsquerdo);
+
+        if(filhoDireitoEsquerdo != null) {
+            filhoDireitoEsquerdo.setParent(n);
+        }
 
         if (avo != null) {
             // atualiza o filho do avô do nó que será rotacionado para o filho esquerdo
@@ -241,6 +247,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
     public void leftRotation(NoAVL<T> n) {
         NoAVL<T> filhoDireito = (NoAVL<T>) n.getRightChild();
         NoAVL<T> avo = (NoAVL<T>) n.getParent();
+        NoAVL<T> filhoEsquerdoDireito =
+            (NoAVL<T>) filhoDireito.getLeftChild();
 
         // atualiza o pai do filho direito para o avô do nó que será rotacionado
         filhoDireito.setParent(avo);
@@ -250,7 +258,11 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         // atualiza o pai do nó que será rotacionado para o filho direito
         n.setParent(filhoDireito);
         // atualiza o filho direito do nó que será rotacionado
-        n.setRightChild(filhoDireito.getLeftChild());
+        n.setRightChild(filhoEsquerdoDireito);
+
+        if(filhoEsquerdoDireito != null) {
+            filhoEsquerdoDireito.setParent(n);
+        }
 
         if (avo != null) {
             // atualiza o filho do avô do nó que será rotacionado para o filho direito
