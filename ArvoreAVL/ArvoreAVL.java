@@ -127,8 +127,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
     }
 
-    // 09/09/2026 - atualmente ele só integra o insert, ainda não refatorei o método
-    // para agregar o remove
+    // responsável por conferir se a árvore está degenerada após uma inserção
+    // e chamar o método de balanceamento, caso necessário
     public void updateBalanceInsert(NoAVL<T> n) {
         NoAVL<T> noPai = (NoAVL<T>) n.getParent();
 
