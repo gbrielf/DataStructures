@@ -141,6 +141,7 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
                 return null;
             }
 
+            // confere se é menor
             if(chave < atual.getItem().getKey()){
                 No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
                 
@@ -150,6 +151,7 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
                     novoEsquerdo.setParent(atual);
                 }
             }
+            // confere se é maior
             else if(chave > atual.getItem().getKey()){
                 No<T> novoDireito = removeRec(atual.getRightChild(), chave);
             
@@ -159,7 +161,7 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
                     novoDireito.setParent(atual);
                 }
             }
-            // equivalente a chave == atual.getItem().getKey()
+            // confere equivalência, chave == atual.getItem().getKey()
             else{
                 // achou o nó com nenhum ou algum filho ou 2 filhos
                 if(atual.getLeftChild() == null){
@@ -169,10 +171,16 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
                     return atual.getLeftChild();
                 }
                 else{
+                    // encontra o sucessor, menor nó da subárvore direita
                     No<T> sucessor = smallestNode(atual);
+
+                    // substituiu o item do sucessor pelo item do nó a ser removido
                     atual.setItem(sucessor.getItem());
+
+                    // remove o sucessor, nó que fisicamente é removido
                     No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
-                    
+
+                    // define o novodireito
                     if(novoDireito != null){
                         novoDireito.setParent(atual);
                     };
