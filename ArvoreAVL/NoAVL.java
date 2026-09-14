@@ -1,5 +1,4 @@
 package ArvoreAVL;
-
 import ArvoreBinariaDePesquisa.Item;
 
 public class NoAVL<T> extends ArvoreBinariaDePesquisa.No<T> {
