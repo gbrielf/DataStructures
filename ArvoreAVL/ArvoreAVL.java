@@ -277,4 +277,22 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             raiz = filhoDireito;
         }
     }
+
+    public void printTree() {
+        No<T> no = getRoot();
+        printTree((NoAVL<T>) no, 0);
+    }
+
+    private void printTree(NoAVL<T> no, int nivel) {
+        if (no != null) {
+            printTree((NoAVL<T>) no.getRightChild(), nivel + 1);
+            for (int i = 0; i < nivel; i++) {
+                System.out.print("    ");
+            }
+            
+            String valorDoNo = no.getItem().toString();
+            System.out.println(valorDoNo + " (BF: " + no.getBF() + ")");
+            printTree((NoAVL<T>) no.getLeftChild(), nivel + 1);
+        }
+    }
 }
