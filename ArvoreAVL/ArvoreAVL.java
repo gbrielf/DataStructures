@@ -277,22 +277,50 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             raiz = filhoDireito;
         }
     }
-
     public void printTree() {
         No<T> no = getRoot();
-        printTree((NoAVL<T>) no, 0);
+        printTree((NoAVL<T>) no, height(raiz), 0);
     }
 
-    private void printTree(NoAVL<T> no, int nivel) {
+    private void printTree(NoAVL<T> no, int nivel, int posicao) {
+        if (this.isEmpty()) {
+            throw new RuntimeException("Árvore vazia");
+        } 
+        int linhas = height(raiz) + 1;
+        int colunas = (int) Math.pow(2, height(raiz));
+        String[][] matrix = new String[linhas][colunas];
+
         if (no != null) {
-            printTree((NoAVL<T>) no.getRightChild(), nivel + 1);
-            for (int i = 0; i < nivel; i++) {
-                System.out.print("    ");
+            completeMatrix(no, matrix, 0, 0);
+        }
+        for (int i = linhas - 1; i >= 0; i--) {
+            for (int j = 0; j < colunas; j++) {
+                if (matrix[i][j] == null) {
+                    System.out.print(" ");
+                } else {
+                    System.out.print(matrix[i][j] + " ");
+                }
             }
-            
-            String valorDoNo = no.getItem().toString();
-            System.out.println(valorDoNo + " (BF: " + no.getBF() + ")");
-            printTree((NoAVL<T>) no.getLeftChild(), nivel + 1);
+            System.out.println();
         }
     }
+
+    public void completeMatrix(NoAVL<T> no, String[][] matrix, int nivel, int posicao) {
+        if (no == null) {
+            return;
+        }
+        System.out.println(
+            "nivel=" + nivel +
+            " posicao=" + posicao +
+            " linhas=" + matrix.length +
+            " colunas=" + matrix[0].length
+        );
+
+        matrix[nivel][posicao] = String.valueOf(no.getItem().getElemento());
+
+        completeMatrix((NoAVL<T>) no.getLeftChild(), matrix, nivel + 1, posicao * 2);
+        completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1);
+    }
+
 }
+
