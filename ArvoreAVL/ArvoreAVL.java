@@ -287,11 +287,11 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             throw new RuntimeException("Árvore vazia");
         } 
         int linhas = height(raiz) + 1;
-        int colunas = (int) Math.pow(2, height(raiz));
+        int colunas = (int) Math.pow(2, linhas) - 1;
         String[][] matrix = new String[linhas][colunas];
 
         if (no != null) {
-            completeMatrix(no, matrix, 0, 0);
+            completeMatrix(no, matrix, 0, 0, linhas);
         }
         for (int i = linhas - 1; i >= 0; i--) {
             for (int j = 0; j < colunas; j++) {
@@ -305,10 +305,13 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
     }
 
-    public void completeMatrix(NoAVL<T> no, String[][] matrix, int nivel, int posicao) {
+    public void completeMatrix(NoAVL<T> no, String[][] matrix, int nivel, int posicao, int linhas) {
         if (no == null) {
             return;
         }
+
+        int coluna = (int) (Math.pow(2, linhas - nivel - 1) * (2 * posicao + 1)) - 1;
+
         System.out.println(
             "nivel=" + nivel +
             " posicao=" + posicao +
@@ -316,10 +319,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             " colunas=" + matrix[0].length
         );
 
-        matrix[nivel][posicao] = String.valueOf(no.getItem().getElemento());
+        matrix[nivel][coluna] = String.valueOf(no.getItem().getElemento());
 
-        completeMatrix((NoAVL<T>) no.getLeftChild(), matrix, nivel + 1, posicao * 2);
-        completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1);
+        completeMatrix((NoAVL<T>) no.getLeftChild(), matrix, nivel + 1, posicao * 2, linhas);
+        completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1, linhas);
     }
 
 }
