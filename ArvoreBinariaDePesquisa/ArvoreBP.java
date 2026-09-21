@@ -100,22 +100,28 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         }
     }
     
-    public No<T> insert( Item<T> item) { 
+    public No<T> insert( Item<T> item) {
+        // cria o novo nó com o item e sem pai
         No<T> novoNo = createNode(item, null);
 
+        // confere se a árvore está vazia, se sim, o novo nó é a raiz
         if(raiz == null){
             raiz = novoNo;
             return raiz;
         }
 
+        // procura o pai do novo nó
         No<T> noPai = searchParent(item.getKey());
 
+        // se o pai for nulo, significa que a chave já existe na árvore
         if(noPai == null){
             throw new RuntimeException("A chave não existe"); // chave não existe
         }
 
+        // define o pai do novo nó e adiciona o novo nó como filho do pai
         novoNo.setParent(noPai);
         
+        // se o novo nó tiver uma chave maior que o pai ele será o novo filho direito, caso contrário será o filho esquerdo
         if(item.getKey() > noPai.getItem().getKey()){
             noPai.setRightChild(novoNo);
         }else{
