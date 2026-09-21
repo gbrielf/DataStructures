@@ -1,8 +1,9 @@
 package FilaDePrioridade;
+import ArvoreBinariaDePesquisa.Item;
 
 public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
     private int tamanho;
-    private Item[] a;
+    private Item<Object>[] a;
     private int capacidade;
     
     public FilaDePrioridadeComHeapArray(int capacidade){
@@ -16,7 +17,7 @@ public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
             throw new RuntimeException("Fila cheia!");
         }
         
-        Item novoItem = new Item(k, o);
+        Item<Object> novoItem = new Item(k, o);
         
         a[tamanho] = novoItem;
         int i = tamanho;
@@ -29,7 +30,7 @@ public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
                 break;
             }
 
-            Item aux = a[i];
+            Item<Object> aux = a[i];
             a[i] = a[pai];
             a[pai] = aux;
 
@@ -44,7 +45,7 @@ public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
             throw new OrderQueueIsEmptyException("A fila está vazia.");
         }
 
-        Item<?> resultado = a[1];
+        Item<Object> resultado = a[1];
         
         a[1] = a[tamanho-1];
         a[tamanho-1] = null;
@@ -73,7 +74,7 @@ public class FilaDePrioridadeComHeapArray implements FilaDePrioridade{
                 break;
             }
 
-            Item<?> aux = (Item<?>) a[i];
+            Item<Object> aux = a[i];
             a[i] = a[menorFilho];
             a[menorFilho] = aux;
 

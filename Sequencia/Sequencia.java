@@ -28,5 +28,5 @@ public interface Sequencia{
     public Object remove(int n);
     // métodos ponte
     public Object atRank(int r);
-    public Object rankOf(No n);
+    public int rankOf(No n);
 }

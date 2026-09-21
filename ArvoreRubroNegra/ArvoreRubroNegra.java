@@ -12,7 +12,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
     }
 
     @Override
-    public NoRubroNegro<T> createNode(Item<T> item, NoRubroNegro<T> pai) {
+    public NoRubroNegro<T> createNode(Item<T> item, No<T> pai) {
         return new NoRubroNegro<>(item, pai);
     }
     
