@@ -8,7 +8,7 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
     protected  No<T> raiz;    
     
     public ArvoreBP(Item<T> item){
-        raiz = new No<> (item, null);
+        raiz = createNode(item, null);
     }
 
     @Override public No<T> getRoot(){ return raiz; }
@@ -77,8 +77,11 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         if(noAtual == null){
            return raiz;
         }
+        if (chave == noAtual.getItem().getKey()) {
+            throw new RuntimeException("Chave já existe");
+        }
         else{
-            while(noAtual.getItem() != null){
+            while(noAtual != null){
                 if(chave > noAtual.getItem().getKey() && noAtual.getRightChild() == null){
                     return noAtual;
                 }
@@ -97,98 +100,98 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         }
     }
     
-        public No<T> insert( Item<T> item) { 
-            No<T> novoNo = createNode(item, null);
+    public No<T> insert( Item<T> item) { 
+        No<T> novoNo = createNode(item, null);
 
-            if(raiz == null){
-                raiz = novoNo;
-                return raiz;
-            }
-
-            No<T> noPai = searchParent(item.getKey());
-
-            if(noPai == null){
-                throw new RuntimeException("A chave não existe"); // chave não existe
-            }
-
-            novoNo.setParent(noPai);
-            
-            if(item.getKey() > noPai.getItem().getKey()){
-                noPai.setRightChild(novoNo);
-            }else{
-                noPai.setLeftChild(novoNo);
-            }
-
-            return novoNo;
+        if(raiz == null){
+            raiz = novoNo;
+            return raiz;
         }
 
-        public Item<T> remove(int chave) { 
-                No<T> noAlvo = search(chave);
+        No<T> noPai = searchParent(item.getKey());
 
-                if(isEmpty() || noAlvo == null){
-                    return null;
-                }
-                
-                Item<T> itemAlvo = noAlvo.getItem();
-                
-                raiz = (No<T>) removeRec(raiz, chave);
-                
-                return itemAlvo;
-            }
+        if(noPai == null){
+            throw new RuntimeException("A chave não existe"); // chave não existe
+        }
 
-        protected No<T> removeRec(No<T> atual, int chave){
-            if(atual == null){
+        novoNo.setParent(noPai);
+        
+        if(item.getKey() > noPai.getItem().getKey()){
+            noPai.setRightChild(novoNo);
+        }else{
+            noPai.setLeftChild(novoNo);
+        }
+
+        return novoNo;
+    }
+
+    public Item<T> remove(int chave) { 
+            No<T> noAlvo = search(chave);
+
+            if(isEmpty() || noAlvo == null){
                 return null;
             }
+            
+            Item<T> itemAlvo = noAlvo.getItem();
+            
+            raiz = (No<T>) removeRec(raiz, chave);
+            
+            return itemAlvo;
+        }
 
-            // confere se é menor
-            if(chave < atual.getItem().getKey()){
-                No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
-                
-                atual.setLeftChild(novoEsquerdo);
+    protected No<T> removeRec(No<T> atual, int chave){
+        if(atual == null){
+            return null;
+        }
+
+        // confere se é menor
+        if(chave < atual.getItem().getKey()){
+            No<T> novoEsquerdo = removeRec(atual.getLeftChild(), chave);
             
-                if(novoEsquerdo != null){
-                    novoEsquerdo.setParent(atual);
-                }
+            atual.setLeftChild(novoEsquerdo);
+        
+            if(novoEsquerdo != null){
+                novoEsquerdo.setParent(atual);
             }
-            // confere se é maior
-            else if(chave > atual.getItem().getKey()){
-                No<T> novoDireito = removeRec(atual.getRightChild(), chave);
-            
-                atual.setRightChild(novoDireito);
-            
+        }
+        // confere se é maior
+        else if(chave > atual.getItem().getKey()){
+            No<T> novoDireito = removeRec(atual.getRightChild(), chave);
+        
+            atual.setRightChild(novoDireito);
+        
+            if(novoDireito != null){
+                novoDireito.setParent(atual);
+            }
+        }
+        // confere equivalência, chave == atual.getItem().getKey()
+        else{
+            // achou o nó com nenhum ou algum filho ou 2 filhos
+            if(atual.getLeftChild() == null){
+                return atual.getRightChild(); // pode ser null
+            }
+            else if(atual.getRightChild() == null){
+                return atual.getLeftChild();
+            }
+            else{
+                // encontra o sucessor, menor nó da subárvore direita
+                No<T> sucessor = smallestNode(atual);
+
+                // substituiu o item do sucessor pelo item do nó a ser removido
+                atual.setItem(sucessor.getItem());
+
+                // remove o sucessor, nó que fisicamente é removido
+                No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
+
+                // define o novodireito
                 if(novoDireito != null){
                     novoDireito.setParent(atual);
-                }
+                };
             }
-            // confere equivalência, chave == atual.getItem().getKey()
-            else{
-                // achou o nó com nenhum ou algum filho ou 2 filhos
-                if(atual.getLeftChild() == null){
-                    return atual.getRightChild(); // pode ser null
-                }
-                else if(atual.getRightChild() == null){
-                    return atual.getLeftChild();
-                }
-                else{
-                    // encontra o sucessor, menor nó da subárvore direita
-                    No<T> sucessor = smallestNode(atual);
-
-                    // substituiu o item do sucessor pelo item do nó a ser removido
-                    atual.setItem(sucessor.getItem());
-
-                    // remove o sucessor, nó que fisicamente é removido
-                    No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
-
-                    // define o novodireito
-                    if(novoDireito != null){
-                        novoDireito.setParent(atual);
-                    };
-                }
-            }
-
-            return atual;
         }
+
+        return atual;
+    }
 
     @Override
     public Iterator<No<T>> nos(){
