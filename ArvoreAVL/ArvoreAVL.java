@@ -277,6 +277,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             raiz = filhoDireito;
         }
     }
+    
     public void printTree() {
         No<T> no = getRoot();
         printTree((NoAVL<T>) no, height(raiz), 0);
@@ -288,10 +289,13 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         } 
         int linhas = height(raiz) + 1;
         int colunas = (int) Math.pow(2, linhas) - 1;
+        int deslocamento = (int) 2* (linhas - nivel - 2);
+        int colunaEsquerda = colunas/2 - deslocamento;
+        int colunaDireita = colunas/2 + deslocamento;
         String[][] matrix = new String[linhas][colunas];
 
         if (no != null) {
-            completeMatrix(no, matrix, 0, 0, linhas);
+            completeMatrix(no, matrix, 0, colunas/2, linhas);
         }
         for (int i = linhas - 1; i >= 0; i--) {
             for (int j = 0; j < colunas; j++) {

@@ -31,16 +31,16 @@ public class TesteSequencia {
         System.out.println("Após insertFirst e insertLast:");
         imprimir(seq);
 
-        No n1 = seq.getFirst();
-        No n2 = seq.getLast();
-        System.out.println("getFirst(): " + n1.getElement());
-        System.out.println("getLast(): " + n2.getElement());
+        No n1 = seq.isFirst();
+        No n2 = seq.isLast();
+        System.out.println("isFirst(): " + n1.getElement());
+        System.out.println("isLast(): " + n2.getElement());
 
-        System.out.println("isFirst(n1)? " + seq.isFirst(n1));
-        System.out.println("isLast(n2)? " + seq.isLast(n2));
+        System.out.println("isFirst(n1)? " + seq.isFirst());
+        System.out.println("isLast(n2)? " + seq.isLast());
 
-        seq.insertAfter(n1, "Depois do Primeiro");
-        seq.insertBefore(n2, "Antes do Ultimo");
+        seq.insertAfter(1, "Depois do Primeiro");
+        seq.insertBefore(2, "Antes do Ultimo");
         System.out.println("Após insertAfter e insertBefore:");
         imprimir(seq);
 
@@ -49,24 +49,24 @@ public class TesteSequencia {
         System.out.println("after(getFirst()): " + n3.getElement());
         System.out.println("before(getLast()): " + n4.getElement());
 
-        System.out.println("replaceElement(n3, 'Novo Valor'): " + seq.replaceElement(n3, "Novo Valor"));
+        System.out.println("replaceElement(n3, 'Novo Valor'): " + seq.replaceElement(3, "Novo Valor"));
         imprimir(seq);
 
         System.out.println("swapElements(n1, n2)");
-        seq.swapElements(n1, n2);
+        seq.swapElements(1, 2);
         imprimir(seq);
         System.out.println("Voltando swapElements(n1, n2)");
-        seq.swapElements(n1, n2);
+        seq.swapElements(1, 2);
         imprimir(seq);
 
-        System.out.println("remove(n3): " + seq.remove(n3));
+        System.out.println("remove(n3): " + seq.remove(3));
         imprimir(seq);
 
         System.out.println("\n--- Métodos Ponte (Bridge) ---");
-        No nRank2 = seq.atRank(2);
+        Object nRank2 = seq.atRank(2);
         if (nRank2 != null) {
-            System.out.println("atRank(2): " + nRank2.getElement());
-            System.out.println("rankOf(nRank2): " + seq.rankOf(nRank2));
+            System.out.println("atRank(2): " + ((No) nRank2).getElement());
+            System.out.println("rankOf(nRank2): " + seq.rankOf((No) nRank2));
         }
 
         System.out.println("\nTamanho final: " + seq.size());

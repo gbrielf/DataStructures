@@ -1,8 +1,8 @@
-public class No{
+public class NoListaLigada{
     private Object elemento;
-    private No proximo;
+    private NoListaLigada proximo;
 
-    public No(Object elemento){
+    public NoListaLigada(Object elemento){
         this.elemento = elemento;
         proximo = null;
     }
@@ -15,11 +15,11 @@ public class No{
         this.elemento = elemento;
     }
 
-    public No getProximo(){
+    public NoListaLigada getProximo(){
         return proximo;
     }
 
-    public void setProximo(No novoNo){
+    public void setProximo(NoListaLigada novoNo){
         this.proximo = novoNo; 
     }
 }
