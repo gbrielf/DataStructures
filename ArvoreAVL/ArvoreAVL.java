@@ -242,6 +242,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         } else {
             raiz = filhoEsquerdo;
         }
+
+        // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
+        n.setBF(height(n.getLeftChild()) - height(n.getRightChild()));
+        filhoEsquerdo.setBF(height(filhoEsquerdo.getLeftChild()) - height(filhoEsquerdo.getRightChild()));
     }
 
     public void leftRotation(NoAVL<T> n) {
@@ -276,6 +280,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         } else {
             raiz = filhoDireito;
         }
+
+        // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
+        n.setBF(height(n.getLeftChild()) - height(n.getRightChild()));
+        filhoDireito.setBF(height(filhoDireito.getLeftChild()) - height(filhoDireito.getRightChild()));
     }
     
     public void printTree() {
