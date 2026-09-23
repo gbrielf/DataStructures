@@ -255,6 +255,7 @@ public class ArvoreBP<T> implements Arvore<No<T>, Item<T>>{
         return filhos.iterator();
     }
 
+    // Substitui o item de um nó por outro item, retornando o item antigo
     @Override
     public Object replace(No<T> n, Item<T> o){
         Item<T> itemAntigo = n.getItem();

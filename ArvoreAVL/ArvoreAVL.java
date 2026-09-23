@@ -277,53 +277,65 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
             raiz = filhoDireito;
         }
     }
+    
     public void printTree() {
-        No<T> no = getRoot();
-        printTree((NoAVL<T>) no, height(raiz), 0);
-    }
-
-    private void printTree(NoAVL<T> no, int nivel, int posicao) {
         if (this.isEmpty()) {
             throw new RuntimeException("Árvore vazia");
-        } 
+        }
+        NoAVL<T> raizAVL = (NoAVL<T>) getRoot();
         int linhas = height(raiz) + 1;
         int colunas = (int) Math.pow(2, linhas) - 1;
         String[][] matrix = new String[linhas][colunas];
 
-        if (no != null) {
-            completeMatrix(no, matrix, 0, 0, linhas);
-        }
-        for (int i = linhas - 1; i >= 0; i--) {
+        completeMatrix(raizAVL, matrix, 0, 0, linhas);
+
+        int largura = maiorTamanho(matrix) + 1; // +1 de espaçamento
+
+        // i começa em 0 (raiz) e vai até a última linha (folhas)
+        for (int i = 0; i < linhas; i++) {
+            StringBuilder sb = new StringBuilder();
             for (int j = 0; j < colunas; j++) {
-                if (matrix[i][j] == null) {
-                    System.out.print(" ");
-                } else {
-                    System.out.print(matrix[i][j] + " ");
-                }
+                String valor = matrix[i][j] == null ? "" : matrix[i][j];
+                sb.append(centralizar(valor, largura));
             }
-            System.out.println();
+            System.out.println(sb.toString());
         }
     }
 
-    public void completeMatrix(NoAVL<T> no, String[][] matrix, int nivel, int posicao, int linhas) {
+    private void completeMatrix(NoAVL<T> no, String[][] matrix, int nivel, int posicao, int linhas) {
         if (no == null) {
             return;
         }
 
         int coluna = (int) (Math.pow(2, linhas - nivel - 1) * (2 * posicao + 1)) - 1;
 
-        System.out.println(
-            "nivel=" + nivel +
-            " posicao=" + posicao +
-            " linhas=" + matrix.length +
-            " colunas=" + matrix[0].length
-        );
-
-        matrix[nivel][coluna] = String.valueOf(no.getItem().getElemento());
+        String chave = String.valueOf(no.getItem().getElemento());
+        String fb = String.valueOf(no.getBF()); 
+        matrix[nivel][coluna] = chave + "[" + fb + "]";
 
         completeMatrix((NoAVL<T>) no.getLeftChild(), matrix, nivel + 1, posicao * 2, linhas);
         completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1, linhas);
     }
 
-}
+    private int maiorTamanho(String[][] matrix) {
+        int max = 0;
+        for (String[] linha : matrix) {
+            for (String valor : linha) {
+                if (valor != null) {
+                    max = Math.max(max, valor.length());
+                }
+            }
+        }
+        return max;
+    }
 
+    private String centralizar(String texto, int largura) {
+        if (texto.length() >= largura) {
+            return texto;
+        }
+        int espacosTotal = largura - texto.length();
+        int esquerda = espacosTotal / 2;
+        int direita = espacosTotal - esquerda;
+        return " ".repeat(esquerda) + texto + " ".repeat(direita);
+    }
+}
