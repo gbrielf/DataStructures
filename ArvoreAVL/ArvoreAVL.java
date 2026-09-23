@@ -160,29 +160,42 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
     }
 
+    // Retorna -1 para nó nulo (convenção padrão de altura em árvores AVL),
+    // evitando NullPointerException no height() da classe base.
+    private int safeHeight(No<T> no) {
+        if (no == null) {
+            return -1;
+        }
+        return height(no);
+    }
     // responsável por conferir se a árvore está degenerada após uma remoção
     // e chamar o método de balanceamento, caso necessário
     public void updateBalanceRemove(NoAVL<T> n) {
-        NoAVL<T> noPai = (NoAVL<T>) n.getParent();
-
-        if (noPai == null) {
+        if (n == null) {
             return;
         }
 
-        if (noPai.getRightChild() == n) {
-            noPai.setBF(noPai.getBF() + 1);
-        } else if (noPai.getLeftChild() == n) {
-            noPai.setBF(noPai.getBF() - 1);
-        }
+        // Recalcula o BF do próprio nó com base nas alturas atuais dos filhos
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
 
-        if (noPai.getBF() == 0) {
-            updateBalanceRemove(noPai);
-        } else if (noPai.getBF() < -1 || noPai.getBF() > +1) {
-            balance(noPai);
-        } else {
+        if (n.getBF() < -1 || n.getBF() > 1) {
+            balance(n);
+            // Após a rotação, "n" não é mais a raiz dessa subárvore;
+            // o pivô que subiu ocupa a posição antiga de n.
+            NoAVL<T> pivo = (NoAVL<T>) n.getParent();
+            if (pivo.getBF() == 0) {
+                // A altura da subárvore diminuiu, continue subindo
+                updateBalanceRemove((NoAVL<T>) pivo.getParent());
+            }
+            // Se pivo.getBF() for ±1, a altura não mudou, então paramos aqui
             return;
         }
 
+        if (n.getBF() == 0) {
+            // Altura da subárvore diminuiu, continue subindo
+            updateBalanceRemove((NoAVL<T>) n.getParent());
+        }
+        // Se n.getBF() for ±1, a altura não mudou, então paramos aqui
     }
 
     // responsável por realizar as rotações simples e duplas,
@@ -244,8 +257,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
 
         // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
-        n.setBF(height(n.getLeftChild()) - height(n.getRightChild()));
-        filhoEsquerdo.setBF(height(filhoEsquerdo.getLeftChild()) - height(filhoEsquerdo.getRightChild()));
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
+        filhoEsquerdo.setBF(safeHeight(filhoEsquerdo.getLeftChild()) - safeHeight(filhoEsquerdo.getRightChild()));
     }
 
     public void leftRotation(NoAVL<T> n) {
@@ -282,8 +295,8 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
 
         // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
-        n.setBF(height(n.getLeftChild()) - height(n.getRightChild()));
-        filhoDireito.setBF(height(filhoDireito.getLeftChild()) - height(filhoDireito.getRightChild()));
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
+        filhoDireito.setBF(safeHeight(filhoDireito.getLeftChild()) - safeHeight(filhoDireito.getRightChild()));
     }
     
     public void printTree() {
