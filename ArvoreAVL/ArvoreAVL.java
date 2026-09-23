@@ -285,6 +285,9 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         NoAVL<T> raizAVL = (NoAVL<T>) getRoot();
         int linhas = height(raiz) + 1;
         int colunas = (int) Math.pow(2, linhas) - 1;
+        int deslocamento = (int) 2* (linhas - nivel - 2);
+        int colunaEsquerda = colunas/2 - deslocamento;
+        int colunaDireita = colunas/2 + deslocamento;
         String[][] matrix = new String[linhas][colunas];
 
         completeMatrix(raizAVL, matrix, 0, 0, linhas);

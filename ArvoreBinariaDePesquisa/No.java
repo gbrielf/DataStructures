@@ -42,6 +42,10 @@ public class No<T> {
     public No<T> getLeftChild() {
             return this.filhoEsquerdo;
     }
+
+    public boolean isRoot() {
+        return this.pai == null;
+    }
         
     public void setRightChild(No<T> filhoDireito) {
         this.filhoDireito = filhoDireito;

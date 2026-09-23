@@ -12,9 +12,71 @@ class SequenciaComLista extends ListaDuplamenteLigada implements Sequencia{
 
     public SequenciaComLista(){
         tamanho = 0;
-        head.getNext(tail);
-        tail.getPrev(head);
+        head.setNext(tail);
+        tail.setPrev(head);
     }
+
+    public No isFirst(){
+        return head.getNext();
+    }
+
+    public No isLast(){
+        return tail.getPrev();
+    }
+
+    public Object remove(int n){
+        No cursor = head.getNext();
+        Object resultado = null;
+
+        for(int i = 0; i <= n; i++){
+            cursor = cursor.getNext();
+            if(i == n){
+                resultado = cursor.getElement();
+                cursor.getPrev().setNext(cursor.getNext());
+                cursor.getNext().setPrev(cursor.getPrev());
+                tamanho--;
+                return resultado;
+            }
+        }
+
+        return null;
+    }
+
+    public Object replaceElement(int n, Object o){
+        return replaceAtRank(n, o);
+    }
+
+    public void insertBefore(int n, Object o){
+        insertAtRank(n, o);
+    }
+
+    public void insertAfter(int n, Object o){
+        insertAtRank(n+1, o);
+    }
+
+    public void swapElements(int n, int q){
+        if(n >= size() || n < 0 || q >= size() || q < 0){
+            throw new VectorRankingException("O ranking informado não está disponível!");
+        }else if(isEmpty()){
+            throw new VectorIsEmptyException("O vetor está vazio");
+        }
+
+        No cursorN = head.getNext();
+        No cursorQ = head.getNext();
+
+        for(int i = 0; i < n; i++){
+            cursorN = cursorN.getNext();
+        }
+
+        for(int i = 0; i < q; i++){
+            cursorQ = cursorQ.getNext();
+        }
+
+        Object temp = cursorN.getElement();
+        cursorN.setElement(cursorQ.getElement());
+        cursorQ.setElement(temp);
+    }
+
 
     public Object elemAtRank(int r){
         if (r >= size() || r < 0){
@@ -56,7 +118,7 @@ class SequenciaComLista extends ListaDuplamenteLigada implements Sequencia{
             throw new VectorRankingException("O ranking informado não está disponível!");
         }
 
-        No novoNo = new No(novoElemento);
+        No novoNo = new No(o);
 
         No cursor = head;
 
@@ -110,12 +172,13 @@ class SequenciaComLista extends ListaDuplamenteLigada implements Sequencia{
     }
 
     public int rankOf(No no){
-        Nó novoNo = head.getNext();
+        No novoNo = head.getNext();
         int indice = 0;
         while(novoNo != no && novoNo != tail){
             novoNo = novoNo.getNext();
             indice++;
         }
+
         return indice;
     }
 }

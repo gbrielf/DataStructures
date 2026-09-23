@@ -1,8 +1,6 @@
-import ArvoreBinariaDePesquisa.No;
-
 class FilaComListaLigada{
-    private No inicio;
-    private No fim;
+    private NoListaLigada inicio;
+    private NoListaLigada fim;
     private int tamanho;
 
     public FilaComListaLigada(){
@@ -12,7 +10,7 @@ class FilaComListaLigada{
     }
 
     public void enqueue(Object elemento){
-        No novoNo = new No(elemento);
+        NoListaLigada novoNo = new NoListaLigada(elemento);
 
         if(inicio == null){
             inicio = novoNo;
