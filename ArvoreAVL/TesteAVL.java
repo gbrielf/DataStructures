@@ -1,22 +1,36 @@
 package ArvoreAVL;
-
+import java.util.Scanner;
 import ArvoreBinariaDePesquisa.Item;
 
 public class TesteAVL {
     public static void main(String[] args) {
-        ArvoreAVL<Integer> arvore = new ArvoreAVL<>(new Item<Integer>(99, 99));
+        ArvoreAVL<Integer> arvore = new ArvoreAVL<>(new Item<Integer>(10, null));
+        Scanner scanner = new Scanner(System.in);
 
-        arvore.insertAVL(new Item<Integer>(30, 30));
-        arvore.insertAVL(new Item<Integer>(20, 20));
-        arvore.insertAVL(new Item<Integer>(10, 10)); // Deve causar rotação à direita
+        while(true){
+            System.out.println("****MENU****\n");
+            System.out.println("1. Inserir valor");
+            System.out.println("2. Remover valor");
+            System.out.println("3. Atualizar valor");
+            System.out.println("4. Apresentar arvore");
+            System.out.println("5. Mostrar altura da árvore");
+            System.out.println("6. Buscar valor de um nó");
+            System.out.println("7. Sair");
+            System.out.print("Escola uma opção e\naperte na tecla '0'\npara finalizar o programa.");
 
-        arvore.insertAVL(new Item<Integer>(40, 40));
-        arvore.insertAVL(new Item<Integer>(50, 50)); // Deve causar rotação à esquerda
+            String opcao = scanner.nextLine().trim();
 
-        arvore.insertAVL(new Item<Integer>(25, 25)); // Deve causar rotação dupla (esquerda-direita)
+            switch(opcao) {
+                case "1":
+                    try{
+                        System.out.print("Qual o valor você deseja inserir na sua árvore?");
+                        int novoValor = Integer.parseInt(scanner.nextLine().trim());
+                        arvore.insertAVL(novoValor);
+                    }
+            }
+        }
 
-        System.out.println("Árvore AVL:");
-        arvore.printTree();
+
     }
     
 }
