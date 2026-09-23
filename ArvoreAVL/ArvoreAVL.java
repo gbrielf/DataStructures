@@ -160,29 +160,42 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         }
     }
 
+    // Retorna -1 para nó nulo (convenção padrão de altura em árvores AVL),
+    // evitando NullPointerException no height() da classe base.
+    private int safeHeight(No<T> no) {
+        if (no == null) {
+            return -1;
+        }
+        return height(no);
+    }
     // responsável por conferir se a árvore está degenerada após uma remoção
     // e chamar o método de balanceamento, caso necessário
     public void updateBalanceRemove(NoAVL<T> n) {
-        NoAVL<T> noPai = (NoAVL<T>) n.getParent();
-
-        if (noPai == null) {
+        if (n == null) {
             return;
         }
 
-        if (noPai.getRightChild() == n) {
-            noPai.setBF(noPai.getBF() + 1);
-        } else if (noPai.getLeftChild() == n) {
-            noPai.setBF(noPai.getBF() - 1);
-        }
+        // Recalcula o BF do próprio nó com base nas alturas atuais dos filhos
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
 
-        if (noPai.getBF() == 0) {
-            updateBalanceRemove(noPai);
-        } else if (noPai.getBF() < -1 || noPai.getBF() > +1) {
-            balance(noPai);
-        } else {
+        if (n.getBF() < -1 || n.getBF() > 1) {
+            balance(n);
+            // Após a rotação, "n" não é mais a raiz dessa subárvore;
+            // o pivô que subiu ocupa a posição antiga de n.
+            NoAVL<T> pivo = (NoAVL<T>) n.getParent();
+            if (pivo.getBF() == 0) {
+                // A altura da subárvore diminuiu, continue subindo
+                updateBalanceRemove((NoAVL<T>) pivo.getParent());
+            }
+            // Se pivo.getBF() for ±1, a altura não mudou, então paramos aqui
             return;
         }
 
+        if (n.getBF() == 0) {
+            // Altura da subárvore diminuiu, continue subindo
+            updateBalanceRemove((NoAVL<T>) n.getParent());
+        }
+        // Se n.getBF() for ±1, a altura não mudou, então paramos aqui
     }
 
     // responsável por realizar as rotações simples e duplas,
@@ -242,6 +255,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         } else {
             raiz = filhoEsquerdo;
         }
+
+        // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
+        filhoEsquerdo.setBF(safeHeight(filhoEsquerdo.getLeftChild()) - safeHeight(filhoEsquerdo.getRightChild()));
     }
 
     public void leftRotation(NoAVL<T> n) {
@@ -276,6 +293,10 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         } else {
             raiz = filhoDireito;
         }
+
+        // atualiza o fator de balanceamento do nó que foi rotacionado e do filho que foi promovido
+        n.setBF(safeHeight(n.getLeftChild()) - safeHeight(n.getRightChild()));
+        filhoDireito.setBF(safeHeight(filhoDireito.getLeftChild()) - safeHeight(filhoDireito.getRightChild()));
     }
     
     public void printTree() {
@@ -285,21 +306,18 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         NoAVL<T> raizAVL = (NoAVL<T>) getRoot();
         int linhas = height(raiz) + 1;
         int colunas = (int) Math.pow(2, linhas) - 1;
-        int deslocamento = (int) 2* (linhas - nivel - 2);
-        int colunaEsquerda = colunas/2 - deslocamento;
-        int colunaDireita = colunas/2 + deslocamento;
         String[][] matrix = new String[linhas][colunas];
 
         completeMatrix(raizAVL, matrix, 0, 0, linhas);
 
-        int largura = maiorTamanho(matrix) + 1; // +1 de espaçamento
+        int largura = largestSize(matrix) + 1; // +1 de espaçamento
 
         // i começa em 0 (raiz) e vai até a última linha (folhas)
         for (int i = 0; i < linhas; i++) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < colunas; j++) {
                 String valor = matrix[i][j] == null ? "" : matrix[i][j];
-                sb.append(centralizar(valor, largura));
+                sb.append(centralize(valor, largura));
             }
             System.out.println(sb.toString());
         }
@@ -312,7 +330,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
 
         int coluna = (int) (Math.pow(2, linhas - nivel - 1) * (2 * posicao + 1)) - 1;
 
-        String chave = String.valueOf(no.getItem().getElemento());
+        String chave = String.valueOf(no.getItem().getKey());
         String fb = String.valueOf(no.getBF()); 
         matrix[nivel][coluna] = chave + "[" + fb + "]";
 
@@ -320,7 +338,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1, linhas);
     }
 
-    private int maiorTamanho(String[][] matrix) {
+    private int largestSize(String[][] matrix) {
         int max = 0;
         for (String[] linha : matrix) {
             for (String valor : linha) {
@@ -332,7 +350,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         return max;
     }
 
-    private String centralizar(String texto, int largura) {
+    private String centralize(String texto, int largura) {
         if (texto.length() >= largura) {
             return texto;
         }
