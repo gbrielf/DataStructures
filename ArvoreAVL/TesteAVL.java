@@ -4,11 +4,23 @@ import ArvoreBinariaDePesquisa.Item;
 
 public class TesteAVL {
     public static void main(String[] args) {
-        ArvoreAVL<Object> arvore = new ArvoreAVL<>(new Item<Object>(10, null));
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Bem-vindo ao Teste da Árvore AVL!");
+        System.out.println("Digite um valor inteiro para iniciar a árvore AVL:");
+        int valorInicial = scanner.nextInt();
+        // consome o \n deixado pelo nextInt()
+        scanner.nextLine(); 
+
+        System.out.println("Digite o elemento associado ao valor (ou deixe em branco para null):");
+        String elementoInputInicial = scanner.nextLine().trim();
+        // is empty? não funciona com object, por isso, transforma em string e verifica se está vazio, se sim, recebe null, se não, recebe elementoInputInicial
+        Object elementoInicial = elementoInputInicial.isEmpty() ? null : elementoInputInicial; 
+
+        ArvoreAVL<Object> arvore = new ArvoreAVL<>(new Item<Object>(valorInicial, elementoInicial));
+
         while(true){
-            System.out.println("****MENU****\n");
+            System.out.println("******MENU******\n");
             System.out.println("1. Inserir valor");
             System.out.println("2. Remover valor");
             System.out.println("3. Atualizar valor");
@@ -16,7 +28,7 @@ public class TesteAVL {
             System.out.println("5. Mostrar altura da árvore");
             System.out.println("6. Buscar valor de um nó");
             System.out.println("0. Sair");
-            System.out.print("Escola uma opção e\naperte na tecla '0'\npara finalizar o programa.");
+            System.out.print("Escola uma opção e\naperte na tecla '0'\npara finalizar o programa.\n\nDigite a opção desejada:");
 
             String opcao = scanner.nextLine().trim();
 
@@ -51,19 +63,19 @@ public class TesteAVL {
                 
                 case "3":
                     try{
-                        System.out.println("Digite o nó (chave) a ser atualizado:");
+                        System.out.println("Digite a chave do nó a ser atualizado:");
                         int chaveAlvo = Integer.parseInt(scanner.nextLine().trim());
 
-                        System.out.println("Digite o novo valor do nó:");
+                        System.out.println("Digite a NOVA CHAVE (número inteiro) do nó:");
                         int novoValor = Integer.parseInt(scanner.nextLine().trim());
 
-                        System.out.println("Digite o novo elemento associado (ou deixe em branco para null):");
+                        System.out.println("Digite o novo elemento associado ao nó (ou deixe em branco para null):");
                         String elementoInput = scanner.nextLine().trim();
                         // novo elemento está vazio? então recebe null, se não recebe elemento input
                         Object novoElemento = elementoInput.isEmpty() ? null : elementoInput; 
 
                         // Cria um novo item com o novo valor
-                        No<Object> noAlvo = search(chaveAlvo);
+                        NoAVL<Object> noAlvo = (NoAVL<Object>) arvore.search(chaveAlvo);
 
                         if(noAlvo == null){
                             System.out.println("Nó com chave "+ chaveAlvo + " não existe!");
@@ -75,7 +87,7 @@ public class TesteAVL {
                     } catch (NumberFormatException e) {
                         System.out.println("Erro: Valor inválido! Digite um número inteiro.");
                     } catch (Exception e) {
-                        System.out.println("Erro ao atualizar o nó " + noAtualizar + ": " + e.getMessage());
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
                 case "4":
@@ -91,16 +103,16 @@ public class TesteAVL {
                     try{
                         System.out.println("Digite o valor do nó a ser buscado:");
                         int valorABuscar = Integer.parseInt(scanner.nextLine().trim());
-                        No<Integer> itemEncontrado = arvore.search(valorABuscar);
+                        NoAVL<Object> itemEncontrado = (NoAVL<Object>) arvore.search(valorABuscar);
                         if(itemEncontrado != null){
-                            System.out.println("O nó com valor " + valorABuscar + " possui o elemento " + itemEncontrado.getValor() + ".");
+                            System.out.println("O nó com valor " + valorABuscar + " possui o elemento " + itemEncontrado.getItem().getElemento() + ".");
                         } else {
                             System.out.println("O nó com valor " + valorABuscar + " não foi encontrado na árvore.");
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Erro: Valor inválido! Digite um número inteiro.");
                     } catch (Exception e) {
-                        System.out.println("Erro ao buscar o nó " + valorABuscar + ": " + e.getMessage());
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
                 

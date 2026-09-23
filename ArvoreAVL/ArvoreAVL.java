@@ -285,21 +285,18 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         NoAVL<T> raizAVL = (NoAVL<T>) getRoot();
         int linhas = height(raiz) + 1;
         int colunas = (int) Math.pow(2, linhas) - 1;
-        int deslocamento = (int) 2* (linhas - nivel - 2);
-        int colunaEsquerda = colunas/2 - deslocamento;
-        int colunaDireita = colunas/2 + deslocamento;
         String[][] matrix = new String[linhas][colunas];
 
         completeMatrix(raizAVL, matrix, 0, 0, linhas);
 
-        int largura = maiorTamanho(matrix) + 1; // +1 de espaçamento
+        int largura = largestSize(matrix) + 1; // +1 de espaçamento
 
         // i começa em 0 (raiz) e vai até a última linha (folhas)
         for (int i = 0; i < linhas; i++) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < colunas; j++) {
                 String valor = matrix[i][j] == null ? "" : matrix[i][j];
-                sb.append(centralizar(valor, largura));
+                sb.append(centralize(valor, largura));
             }
             System.out.println(sb.toString());
         }
@@ -312,7 +309,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
 
         int coluna = (int) (Math.pow(2, linhas - nivel - 1) * (2 * posicao + 1)) - 1;
 
-        String chave = String.valueOf(no.getItem().getElemento());
+        String chave = String.valueOf(no.getItem().getKey());
         String fb = String.valueOf(no.getBF()); 
         matrix[nivel][coluna] = chave + "[" + fb + "]";
 
@@ -320,7 +317,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         completeMatrix((NoAVL<T>) no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1, linhas);
     }
 
-    private int maiorTamanho(String[][] matrix) {
+    private int largestSize(String[][] matrix) {
         int max = 0;
         for (String[] linha : matrix) {
             for (String valor : linha) {
@@ -332,7 +329,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         return max;
     }
 
-    private String centralizar(String texto, int largura) {
+    private String centralize(String texto, int largura) {
         if (texto.length() >= largura) {
             return texto;
         }
