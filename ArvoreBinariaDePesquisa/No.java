@@ -43,6 +43,18 @@ public class No<T> {
             return this.filhoEsquerdo;
     }
 
+    public No<T> getSibling(){
+        // confere se é raiz
+        is(getParent() == null){
+            return null;
+        }
+        if(isLeftChild()){
+            return getParent().getRightChild();
+        }else{
+            return getParent().getLeftChild();
+        }
+    }
+
     public boolean isRoot() {
         return this.pai == null;
     }
