@@ -34,8 +34,17 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
         return noInserido;
     }
 
+
     // Implementação da aferição do balanceamento da árvore rubro-negra
     public void updateBalance(NoRubroNegro<T> no) {
+        if(no.getColor() === "vermelho" && no.getParent().getColor() === "vermelho"){
+            if(no.getSibling().getColor() === "vermelho"){
+                
+            }
+            else if(no.getSibling().getColor() === "preto"){
+
+            }
+        }
     }
 
     // Implementação do balanceamento e das rotações aplicando as regras da árvore rubro-negra
