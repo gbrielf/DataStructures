@@ -45,10 +45,10 @@ public class No<T> {
 
     public No<T> getSibling(){
         // confere se é raiz
-        is(getParent() == null){
+        if(getParent() == null){
             return null;
         }
-        if(isLeftChild()){
+        else if(isLeftChild()){
             return getParent().getRightChild();
         }else{
             return getParent().getLeftChild();
