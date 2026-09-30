@@ -5,7 +5,7 @@ import ArvoreBinariaDePesquisa.Item;
 import ArvoreBinariaDePesquisa.No;
 
 public class ArvoreAVL<T> extends ArvoreBP<T> {
-    private NoAVL<T> paiRemovido;
+    private NoAVL<T> paiDoRemovido;
 
     public ArvoreAVL(Item<T> item) {
         super(item);
@@ -16,6 +16,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
         return new NoAVL<T>(item, (NoAVL<T>) parent);
     }
 
+    // o mesmo método usado em rubro negra
     @Override
     protected No<T> removeRec(
             No<T> atual,
@@ -52,7 +53,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
                 // Quando atual é uma folha, novoEsquerdo pode ser null.
                 // Além disso, o pai importante é o pai do nó fisicamente removido.
                 // Capturei a referência antes de retornar o filho
-                paiRemovido = (NoAVL<T>) atual.getParent();
+                paiDoRemovido = (NoAVL<T>) atual.getParent();
 
                 No<T> filho = atual.getRightChild();
 
@@ -67,7 +68,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
 
                 // Capturamos o pai do nó que será fisicamente removido
                 // antes de retornar o filho.
-                paiRemovido = (NoAVL<T>) atual.getParent();
+                paiDoRemovido = (NoAVL<T>) atual.getParent();
 
                 No<T> filho = atual.getLeftChild();
 
@@ -80,7 +81,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
 
             else {
 
-                // NÓ COM DOIS FILHOS
+                // Nó com dois filhos
                 NoAVL<T> sucessor = (NoAVL<T>) smallestNode(atual);
 
                 // O sucessor não é a raiz da árvore.
@@ -89,7 +90,7 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
 
                 // O pai que precisamos guardar é o pai do sucessor,
                 // pois é nessa subárvore que ocorrerá a remoção física.
-                paiRemovido = (NoAVL<T>) sucessor.getParent();
+                paiDoRemovido = (NoAVL<T>) sucessor.getParent();
 
                 // Agora removemos fisicamente o sucessor da subárvore direita.
                 No<T> novoDireito = removeRec(
@@ -115,15 +116,15 @@ public class ArvoreAVL<T> extends ArvoreBP<T> {
     public void removeAVL(int chave) {
         // Limpa a referência antes de iniciar uma nova remoção,
         // porque ela pode estar registrando um valor de operações anteriores
-        paiRemovido = null;
+        paiDoRemovido = null;
 
         // removeRec retorna a nova raiz da subárvore.
         // Por isso precisamos guardar o retorno em raiz.
         raiz = removeRec(getRoot(), chave);
 
-        // Se o elemento removido era a raiz, paiRemovido será null.
-        if (paiRemovido != null) {
-            updateBalanceRemove(paiRemovido);
+        // Se o elemento removido era a raiz, paiDoRemovido será null.
+        if (paiDoRemovido != null) {
+            updateBalanceRemove(paiDoRemovido);
         }
     }
 
