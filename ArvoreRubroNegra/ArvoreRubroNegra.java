@@ -1,5 +1,4 @@
 package ArvoreRubroNegra;
-import ArvoreAVL.NoAVL;
 import ArvoreBinariaDePesquisa.ArvoreBP;
 import ArvoreBinariaDePesquisa.No;
 import ArvoreBinariaDePesquisa.Item;
@@ -7,6 +6,7 @@ import ArvoreBinariaDePesquisa.Item;
 public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
     public String cor;
     private NoRubroNegro<T> paiDoRemovido;
+    private boolean removidoEraFilhoEsquerdo;
 
     public ArvoreRubroNegra(Item<T> item) {
         super(item);
@@ -16,18 +16,6 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
     @Override
     public NoRubroNegro<T> createNode(Item<T> item, No<T> pai) {
         return new NoRubroNegro<>(item, pai);
-    }
-
-    // Retorna o nó removido de forma recursiva da árvore rubro negra 
-    public void removeRB(int chave){
-        paiDoRemovido = null;
-
-        NoRubroNegro<T> atual = (NoRubroNegro<T>) getRoot();
-
-        paiDoRemovido = (NoRubroNegro<T>) removeRec(atual,chave);
-        if( paiDoRemovido != null){
-            updateBalanceRemove(paiDoRemovido);
-        }
     }
 
     // o mesmo método utilizado em avl
@@ -66,6 +54,10 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 // Capturei a referência antes de retornar o filho
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
 
+                if(paiDoRemovido != null){
+                    removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
+                }
+
                 No<T> filho = atual.getRightChild();
 
                 if(filho != null){
@@ -78,6 +70,10 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 // Capturamos o pai do nó que será fisicamente removido
                 // antes de retornar o filho.
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
+                
+                if(paiDoRemovido != null){
+                    removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
+                }
 
                 No<T> filho = atual.getLeftChild();
 
@@ -94,19 +90,41 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 atual.setItem(sucessor.getItem());
 
                 paiDoRemovido = (NoRubroNegro<T>) sucessor.getParent();
+                
+                if(paiDoRemovido != null){
+                    removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == sucessor);
+                }
 
                 No<T> novoDireito = removeRec(atual.getRightChild(), sucessor.getItem().getKey());
+
+                atual.setRightChild(novoDireito);
 
                 if(novoDireito != null){
                     novoDireito.setParent(atual);
                 }
+
             }
         }
 
         return atual;
     }
-    
-    
+
+    // Retorna o nó removido de forma recursiva da árvore rubro negra 
+    public void removeRB(int chave){
+        paiDoRemovido = null;
+
+        raiz = (NoRubroNegro<T>) removeRec(getRoot(), chave);
+        
+        if( paiDoRemovido != null){
+            updateBalanceRemove(paiDoRemovido);
+        }
+    }    
+
+    public void updateBalanceRemove(NoRubroNegro<T> n){
+
+        
+    }
+
     public String getColor(NoRubroNegro<T> n) {
         return n.getNodeColor();
     }
@@ -125,7 +143,6 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
         return noInserido;
     }
 
-
     // Implementação da aferição do balanceamento da árvore rubro-negra
     public void updateBalanceInsert(NoRubroNegro<T> n) {
         // Caso 0: Se o nó inserido for a raiz, apenas pinta de preto
@@ -134,11 +151,13 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
             return;
         }
         // Caso 1: Se o nó inserido for vermelho e o pai for vermelho, precisa balancear
-        else if(n.getNodeColor() == "vermelho" && n.getParent().getNodeColor() == "vermelho") {
+        else if(n.getNodeColor().equals("vermelho") && n.getParent().getNodeColor().equals("vermelho")) {
+            NoRubroNegro<T> tio = n.getSibling();
+
             // Caso 1: Tio vermelho
-            if(n.getSibling().getNodeColor() == "vermelho"){
+            if(tio != null && tio.getNodeColor().equals("vermelho")){
                     n.getParent().setNodeColor("preto");
-                    n.getSibling().setNodeColor("preto");
+                    tio.setNodeColor("preto");
                     n.getGrandParent().setNodeColor("preto");
             }else{
                 // Caso 2: Tio preto
@@ -146,10 +165,6 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
             }
             
         }
-    }
-
-    public void updateBalanceRemove(NoRubroNegro<T> n){
-
     }
 
     // Implementação do balanceamento e das rotações aplicando as regras da árvore rubro-negra para inserção
@@ -167,15 +182,20 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 n.getSibling().setNodeColor("vermelho");
             }
         }else if(n.isLeftChild() && n.getParent().isRightChild()){
+            NoRubroNegro<T> avo = n.getGrandParent();
             rightRotation(n.getParent());
-            leftRotation(n.getGrandParent());
+            leftRotation(avo);
+
             n.setNodeColor("preto");
-            n.getSibling().setNodeColor("vermelho");
+            n.getLeftChild().setNodeColor("vermelho");
+            n.getRightChild().setNodeColor("vermelho");
         }else if(n.isRightChild() && n.getParent().isLeftChild()){
+            NoRubroNegro<T> avo = n.getGrandParent();
             leftRotation(n.getParent());
-            rightRotation(n.getGrandParent());
+            rightRotation(avo);
             n.setNodeColor("preto");
-            n.getSibling().setNodeColor("vermelho");
+            n.getLeftChild().setNodeColor("vermelho");
+            n.getRightChild().setNodeColor("vermelho");
         }
     }
 
