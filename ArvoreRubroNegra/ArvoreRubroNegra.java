@@ -1,4 +1,5 @@
 package ArvoreRubroNegra;
+import ArvoreAVL.NoAVL;
 import ArvoreBinariaDePesquisa.ArvoreBP;
 import ArvoreBinariaDePesquisa.No;
 import ArvoreBinariaDePesquisa.Item;
@@ -7,6 +8,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
     public String cor;
     private NoRubroNegro<T> paiDoRemovido;
     private boolean removidoEraFilhoEsquerdo;
+    private String corDoRemovido;
 
     public ArvoreRubroNegra(Item<T> item) {
         super(item);
@@ -53,6 +55,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 // Além disso, o pai importante é o pai do nó fisicamente removido.
                 // Capturei a referência antes de retornar o filho
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
+                corDoRemovido = ((NoRubroNegro<T>) atual).getNodeColor();
 
                 if(paiDoRemovido != null){
                     removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
@@ -70,6 +73,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 // Capturamos o pai do nó que será fisicamente removido
                 // antes de retornar o filho.
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
+                corDoRemovido = ((NoRubroNegro<T>) atual).getNodeColor();
                 
                 if(paiDoRemovido != null){
                     removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
@@ -90,6 +94,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 atual.setItem(sucessor.getItem());
 
                 paiDoRemovido = (NoRubroNegro<T>) sucessor.getParent();
+                corDoRemovido = ((NoRubroNegro<T>) atual).getNodeColor();
                 
                 if(paiDoRemovido != null){
                     removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == sucessor);
@@ -112,17 +117,128 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
     // Retorna o nó removido de forma recursiva da árvore rubro negra 
     public void removeRB(int chave){
         paiDoRemovido = null;
+        corDoRemovido = null;
 
         raiz = (NoRubroNegro<T>) removeRec(getRoot(), chave);
         
-        if( paiDoRemovido != null){
+        // só chama o updateBalanceRemove se o nó removido for preto, pois a remoção de um nó vermelho não viola as propriedades da árvore rubro-negra
+        if( paiDoRemovido != null && corDoRemovido.equals("preto") ){
             updateBalanceRemove(paiDoRemovido);
         }
     }    
 
     public void updateBalanceRemove(NoRubroNegro<T> n){
+        if(n == null){
+            return;
+        }
 
-        
+        boolean nEraFilhoEsquerdo = removidoEraFilhoEsquerdo;
+
+        NoRubroNegro<T> irmao = nEraFilhoEsquerdo
+            ? n.getRightChild(): n.getLeftChild();
+
+        // Caso 1: O irmão é vermelho
+        if(irmao != null && irmao.getNodeColor().equals("vermelho")){
+            n.setNodeColor("vermelho");
+            irmao.setNodeColor("preto");
+            
+            if(nEraFilhoEsquerdo){
+                leftRotation(n);
+            }else{
+                rightRotation(n);
+            }
+            // depois da rotação o irmão mudou, então atualizamos a referência
+            irmao = nEraFilhoEsquerdo
+                ? n.getRightChild(): n.getLeftChild();
+        }
+
+        // Caso 2: O irmão é preto 
+        NoRubroNegro<T> sobrinhoProximo = nEraFilhoEsquerdo
+            ? (irmao != null ? irmao.getLeftChild() : null)
+            : (irmao != null ? irmao.getRightChild() : null);
+
+        NoRubroNegro<T> sobrinhoDistante = nEraFilhoEsquerdo
+            ? (irmao != null ? irmao.getRightChild() : null)
+            : (irmao != null ? irmao.getLeftChild() : null);
+
+        boolean sobrinhoDistanteVermelho = sobrinhoDistante != null && sobrinhoDistante.getNodeColor().equals("vermelho");
+        boolean sobrinhoProximoVermelho = sobrinhoProximo != null && sobrinhoProximo.getNodeColor().equals("vermelho");
+
+        // caso 4: sobrinho distante vermelho -> rotação do pai + repintamento
+        if(sobrinhoDistanteVermelho){
+            if(irmao != null){
+                irmao.setNodeColor(n.getNodeColor());
+            }
+            n.setNodeColor("preto");
+            sobrinhoDistante.setNodeColor("preto");
+
+            if(nEraFilhoEsquerdo){
+                leftRotation(n);
+            }else{
+                rightRotation(n);
+            }
+            return;
+        }
+
+        // caso 3: sobrinho próximo vermelho -> rotação do irmão + repintamento
+        if(sobrinhoProximoVermelho){
+            if(irmao != null){
+                irmao.setNodeColor("vermelho");
+                sobrinhoProximo.setNodeColor("preto");
+
+                if(nEraFilhoEsquerdo){
+                    rightRotation(irmao);
+                }else{
+                    leftRotation(irmao);
+                }
+            }
+
+            // recalcula tudo e cai no caso 4
+            irmao = nEraFilhoEsquerdo
+                ? n.getRightChild(): n.getLeftChild();
+            
+            sobrinhoDistante = nEraFilhoEsquerdo
+                ? (irmao != null ? irmao.getRightChild() : null)
+                : (irmao != null ? irmao.getLeftChild() : null);
+            
+            if(irmao != null){
+                irmao.setNodeColor(n.getNodeColor());
+            }
+            n.setNodeColor("preto");
+            if(sobrinhoDistante != null){
+                sobrinhoDistante.setNodeColor("preto");
+            }
+
+            if(nEraFilhoEsquerdo){
+                leftRotation(n);
+            }else{
+                rightRotation(n);
+            }
+            return;
+        }
+
+        // caso 2: irmão preto com dois sobrinhos pretos (ou nulos)
+        // recolore o irmão de vermelho e sobe o dupl negro para o pai
+        if(irmao != null) {
+            irmao.setNodeColor("vermelho");
+        }
+
+        if(n.getNodeColor().equals("vermelho")) {
+            // pai absorve o duplo negro e fica preto
+            n.setNodeColor("preto");
+            return;
+        }
+
+        // pai já era preto, o duplo negro sobe o próprio pai se torna o vazio
+        NoRubroNegro<T> avo = n.getParent();
+
+        if(avo == null){
+            //chegou na raiz, termina a propagação
+            return;
+        }
+
+        removidoEraFilhoEsquerdo = (avo.getLeftChild() == n);
+        updateBalanceRemove(avo);
     }
 
     public String getColor(NoRubroNegro<T> n) {
@@ -150,22 +266,37 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
             n.setNodeColor("preto");
             return;
         }
-        // Caso 1: Se o nó inserido for vermelho e o pai for vermelho, precisa balancear
-        else if(n.getNodeColor().equals("vermelho") && n.getParent().getNodeColor().equals("vermelho")) {
-            NoRubroNegro<T> tio = n.getSibling();
 
-            // Caso 1: Tio vermelho
-            if(tio != null && tio.getNodeColor().equals("vermelho")){
-                    n.getParent().setNodeColor("preto");
-                    tio.setNodeColor("preto");
-                    n.getGrandParent().setNodeColor("preto");
-            }else{
-                // Caso 2: Tio preto
-                balanceInsert(n);
-            }
-            
+        // se o pai for preto não há violação
+        if (n.getParent().getNodeColor().equals("preto")) {
+            return;
         }
+
+        // pai é vermelho, resolver pois ocorreu violação
+        NoRubroNegro<T> pai = n.getParent();
+        NoRubroNegro<T> avo = n.getGrandParent();
+
+        if(avo == null){
+            // segurança, caso o pai seja o raiz
+            pai.setNodeColor("preto");
+            return;
+        }
+
+        NoRubroNegro<T> tio = pai.getSibling(); // tio = irmão do pai, não de n
+
+
+        // Caso 1: Se o nó inserido for vermelho e o pai for vermelho, precisa balancear
+        if(tio != null && n.getNodeColor().equals("vermelho")){
+            pai.setNodeColor("preto");
+            tio.setNodeColor("preto");
+            avo.setNodeColor("vermelho");
+            updateBalanceInsert(avo);
+        }else{
+            // Caso 2: Tio preto
+            balanceInsert(n);
+        }   
     }
+    
 
     // Implementação do balanceamento e das rotações aplicando as regras da árvore rubro-negra para inserção
     public void balanceInsert(NoRubroNegro<T> n) {
@@ -245,4 +376,67 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
         n.setParent(filhoEsquerdo);
     }
 
+     // Reaproveitando a estrutura do printTree da árvore AVL, trocando o
+    // fator de balanceamento (BF) pela cor do nó.
+    public void printTree() {
+        if (this.isEmpty()) {
+            throw new RuntimeException("Árvore vazia");
+        }
+        NoRubroNegro<T> raizRB = (NoRubroNegro<T>) getRoot();
+        int linhas = height(raiz) + 1;
+        int colunas = (int) Math.pow(2, linhas) - 1;
+        String[][] matrix = new String[linhas][colunas];
+ 
+        completeMatrix(raizRB, matrix, 0, 0, linhas);
+ 
+        int largura = largestSize(matrix) + 1; // +1 de espaçamento
+ 
+        // i começa em 0 (raiz) e vai até a última linha (folhas)
+        for (int i = 0; i < linhas; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < colunas; j++) {
+                String valor = matrix[i][j] == null ? "" : matrix[i][j];
+                sb.append(centralize(valor, largura));
+            }
+            System.out.println(sb.toString());
+        }
+    }
+ 
+    private void completeMatrix(NoRubroNegro<T> no, String[][] matrix, int nivel, int posicao, int linhas) {
+        if (no == null) {
+            return;
+        }
+ 
+        int coluna = (int) (Math.pow(2, linhas - nivel - 1) * (2 * posicao + 1)) - 1;
+ 
+        String chave = String.valueOf(no.getItem().getKey());
+        // "V" para vermelho, "P" para preto
+        String cor = no.getNodeColor().equals("vermelho") ? "V" : "P";
+        matrix[nivel][coluna] = chave + "(" + cor + ")";
+ 
+        completeMatrix(no.getLeftChild(), matrix, nivel + 1, posicao * 2, linhas);
+        completeMatrix(no.getRightChild(), matrix, nivel + 1, (posicao * 2) + 1, linhas);
+    }
+ 
+    private int largestSize(String[][] matrix) {
+        int max = 0;
+        for (String[] linha : matrix) {
+            for (String valor : linha) {
+                if (valor != null) {
+                    max = Math.max(max, valor.length());
+                }
+            }
+        }
+        return max;
+    }
+ 
+    private String centralize(String texto, int largura) {
+        if (texto.length() >= largura) {
+            return texto;
+        }
+        int espacosTotal = largura - texto.length();
+        int esquerda = espacosTotal / 2;
+        int direita = espacosTotal - esquerda;
+        return " ".repeat(esquerda) + texto + " ".repeat(direita);
+    }
 }
