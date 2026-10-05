@@ -49,7 +49,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
             }
         // Se a chave for igual à chave do nó atual, encontramos o nó a ser removido
         }else{
-            // quando esse nó não tiver filhos, apenas o remove
+            // confere se o nó atual é uma folha ou tem apenas um filho
             if(atual.getLeftChild() == null){
                 // Quando atual é uma folha, novoEsquerdo pode ser null.
                 // Além disso, o pai importante é o pai do nó fisicamente removido.
@@ -57,36 +57,45 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
                 corDoRemovido = ((NoRubroNegro<T>) atual).getNodeColor();
 
+                // Se o pai do nó removido não for nulo, determine se o nó removido era filho esquerdo ou direito
                 if(paiDoRemovido != null){
                     removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
                 }
 
+                // confere se o nó atual tem filho direito, já que já conferimos que filho esquerdo é null
                 No<T> filho = atual.getRightChild();
 
+                // Atualiza o filho direito do nó removido para apontar para o pai do nó removido, se o filho direito não for nulo
                 if(filho != null){
                     filho.setParent(atual.getParent());
                 }
 
+                // Retorna o filho do nó removido, porque é a partir dele que a árvore será reestruturada
                 return filho;
             }
+            // confere se o nó não tem filho direito, caso não tenha, o filho esquerdo será retornado
             else if (atual.getRightChild() == null){
                 // Capturamos o pai do nó que será fisicamente removido
                 // antes de retornar o filho.
                 paiDoRemovido = (NoRubroNegro<T>) atual.getParent();
                 corDoRemovido = ((NoRubroNegro<T>) atual).getNodeColor();
                 
+                // se o pai do nó removido não for nulo, confere se o nó removido era filho esquerdo
                 if(paiDoRemovido != null){
                     removidoEraFilhoEsquerdo = (paiDoRemovido.getLeftChild() == atual);
                 }
 
+                // confere se o nó atual tem filho esquerdo, já que já conferimos que filho direito é null
                 No<T> filho = atual.getLeftChild();
 
+                // Atualiza o filho esquerdo do nó removido para apontar para o pai do nó removido, se o filho esquerdo não for nulo
                 if (filho != null) {
                     filho.setParent(atual.getParent());
                 }
 
                 return filho;
             }
+            // Se o nó tem dois filhos, encontra o sucessor
             else {
                 // Nó com dois filhos
                 NoRubroNegro<T> sucessor = (NoRubroNegro<T>) smallestNode(atual);
@@ -121,19 +130,22 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
 
         raiz = (NoRubroNegro<T>) removeRec(getRoot(), chave);
         
-        // só chama o updateBalanceRemove se o nó removido for preto, pois a remoção de um nó vermelho não viola as propriedades da árvore rubro-negra
+        // só chama o updateBalanceRemove se o nó removido for preto, 
+        // pois a remoção de um nó vermelho NUNCA viola as propriedades da árvore rubro-negra
         if( paiDoRemovido != null && corDoRemovido.equals("preto") ){
             updateBalanceRemove(paiDoRemovido);
         }
     }    
 
     public void updateBalanceRemove(NoRubroNegro<T> n){
+        // n é o pai do nó removido fisicamente, que pode ter ficado com duplo negro
         if(n == null){
             return;
         }
 
         boolean nEraFilhoEsquerdo = removidoEraFilhoEsquerdo;
 
+        // Encontra o irmão do nó n
         NoRubroNegro<T> irmao = nEraFilhoEsquerdo
             ? n.getRightChild(): n.getLeftChild();
 
@@ -153,6 +165,7 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
         }
 
         // Caso 2: O irmão é preto 
+        // Se o irmão é preto, precisamos verificar os sobrinhos
         NoRubroNegro<T> sobrinhoProximo = nEraFilhoEsquerdo
             ? (irmao != null ? irmao.getLeftChild() : null)
             : (irmao != null ? irmao.getRightChild() : null);
@@ -161,10 +174,11 @@ public class ArvoreRubroNegra<T> extends ArvoreBP<T> {
             ? (irmao != null ? irmao.getRightChild() : null)
             : (irmao != null ? irmao.getLeftChild() : null);
 
+        // Verifica se os sobrinhos são vermelhos
         boolean sobrinhoDistanteVermelho = sobrinhoDistante != null && sobrinhoDistante.getNodeColor().equals("vermelho");
         boolean sobrinhoProximoVermelho = sobrinhoProximo != null && sobrinhoProximo.getNodeColor().equals("vermelho");
 
-        // caso 4: sobrinho distante vermelho -> rotação do pai + repintamento
+        // caso 4: sobrinho distante vermelho, então rotação do pai + repintamento
         if(sobrinhoDistanteVermelho){
             if(irmao != null){
                 irmao.setNodeColor(n.getNodeColor());
