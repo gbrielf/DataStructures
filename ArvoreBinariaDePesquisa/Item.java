@@ -1,5 +1,6 @@
 package ArvoreBinariaDePesquisa;
 
+
 public class Item<T> {
     private int chave;
     private T elemento;
@@ -17,11 +18,11 @@ public class Item<T> {
         this.chave = chave;
     }
 
-    public T getElemento() {
+    public T getElement() {
         return this.elemento;
     }
 
-    public void setElemento(T elemento) {
+    public void setElement(T elemento) {
         this.elemento = elemento;
     }
 }
