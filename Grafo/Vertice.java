@@ -47,11 +47,11 @@ public class Vertice {
         this.rotulo = rotulo;
     }
 
-    public Object getElemento(){
+    public Object getElement(){
         return elemento;
     }
 
-    public void setElemento(Object elemento){
+    public void setElement(Object elemento){
         this.elemento = elemento;
     }
 }
