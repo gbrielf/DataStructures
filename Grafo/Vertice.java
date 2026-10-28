@@ -15,12 +15,28 @@ public class Vertice {
         this.indegree = 0;
     }
 
-    public double getValue(){
-        return valor;
+    public int getDegree(){
+        return grau;
     }
 
-    public void setValue(double valor){
-        this.valor = valor;
+    public void setDegree(int grau){
+        this.grau = grau;
+    }
+
+    public int getOutdegree(){
+        return outdegree;
+    }
+
+    public void setOutdegree(int outdegree){
+        this.outdegree = outdegree;
+    }
+
+    public int getIndegree(){
+        return indegree;
+    }
+
+    public void setIndegree(int indegree){
+        this.indegree = indegree;
     }
 
     public String getLabel(){
@@ -30,5 +46,12 @@ public class Vertice {
     public void setLabel(String rotulo){
         this.rotulo = rotulo;
     }
-    
+
+    public Double getValue(){
+        return valor;
+    }
+
+    public void setValue(double valor){
+        this.valor = valor;
+    }
 }
