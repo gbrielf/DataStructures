@@ -5,11 +5,11 @@ public class Vertice {
     private int outdegree; // em um dígrafo, é o número de arestas que SAEM do vértice     
     private int indegree; // em um dígrafo, é o número de arestas que CHEGAM no vértice
     private String rotulo; // título de um vértice, não é obrigatório
-    private Double valor; // valor de um vértice, não é obrigatório
+    private Object elemento; // elemento de um vértice, não é obrigatório
 
     public Vertice(){
         this.rotulo = null;
-        this.valor = null;
+        this.elemento = null;
         this.grau = 0;
         this.outdegree = 0;
         this.indegree = 0;
@@ -47,11 +47,11 @@ public class Vertice {
         this.rotulo = rotulo;
     }
 
-    public Double getValue(){
-        return valor;
+    public Object getElement(){
+        return elemento;
     }
 
-    public void setValue(double valor){
-        this.valor = valor;
+    public void setElement(Object elemento){
+        this.elemento = elemento;
     }
 }

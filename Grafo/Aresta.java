@@ -32,12 +32,12 @@ public class Aresta {
         this.elemento = elemento;
     }
 
-    public void setWay(Sentido sentido){
-        this.sentido = sentido;
-    }
-
     public Sentido getWay(){
         return sentido;
+    }
+
+    public void setWay(Sentido sentido){
+        this.sentido = sentido;
     }
 
     public Vertice getVertexI(){
