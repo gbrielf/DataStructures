@@ -50,7 +50,6 @@ public class Vertice {
     public Object getElement(){
         return elemento;
     }
-
     public void setElement(Object elemento){
         this.elemento = elemento;
     }

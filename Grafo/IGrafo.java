@@ -1,7 +1,5 @@
     package Grafo;
     import java.util.ArrayList;
-    import Grafo.Aresta;
-    import Grafo.Vertice;
 
     interface IGrafo{
         public ArrayList<Vertice> finalVertex(Aresta e); //Retorna um array armazenando os vértices finais da aresta e.
